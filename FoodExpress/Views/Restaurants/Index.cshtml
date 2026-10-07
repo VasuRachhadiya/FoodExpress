@@ -1,0 +1,92 @@
+@model FoodExpress.ViewModels.RestaurantFilterViewModel
+@{
+    ViewData["Title"] = "Browse Restaurants";
+}
+
+<div class="container py-5">
+    <div class="row mb-4 align-items-center">
+        <div class="col-md-6">
+            <h1 class="fw-bold mb-1">Explore Restaurants</h1>
+            <p class="text-muted mb-0">Discover top-rated kitchens in your area.</p>
+        </div>
+        <div class="col-md-6 text-md-end mt-3 mt-md-0">
+            <span class="badge bg-primary fs-6 px-3 py-2 rounded-pill">@Model.Restaurants.Count Restaurants Available</span>
+        </div>
+    </div>
+
+    <!-- Filter Bar -->
+    <div class="card border-0 shadow-sm rounded-4 p-3 mb-5 bg-white">
+        <form method="get" class="row g-3 align-items-center">
+            <div class="col-md-6">
+                <div class="input-group">
+                    <span class="input-group-text bg-light border-0"><i class="bi bi-search"></i></span>
+                    <input type="text" name="search" value="@Model.Search" class="form-control bg-light border-0" placeholder="Search by restaurant name or keywords..." />
+                </div>
+            </div>
+            <div class="col-md-4">
+                <select name="city" class="form-select bg-light border-0">
+                    <option value="">All Cities</option>
+                    @foreach (var city in Model.Cities)
+                    {
+                        <option value="@city" selected="@(city == Model.City)">@city</option>
+                    }
+                </select>
+            </div>
+            <div class="col-md-2 d-flex gap-2">
+                <button type="submit" class="btn btn-primary rounded-pill w-100">Filter</button>
+                <a asp-action="Index" class="btn btn-outline-secondary rounded-pill px-3" title="Reset Filters"><i class="bi bi-arrow-counterclockwise"></i></a>
+            </div>
+        </form>
+    </div>
+
+    <!-- Restaurant Cards Grid -->
+    @if (!Model.Restaurants.Any())
+    {
+        <div class="text-center py-5">
+            <i class="bi bi-shop fs-1 text-muted"></i>
+            <h4 class="fw-bold mt-3">No restaurants match your criteria</h4>
+            <p class="text-muted">Try resetting your filters or searching for another term.</p>
+            <a asp-action="Index" class="btn btn-primary rounded-pill px-4">View All Restaurants</a>
+        </div>
+    }
+    else
+    {
+        <div class="row g-4">
+            @foreach (var r in Model.Restaurants)
+            {
+                <div class="col-md-6 col-lg-4">
+                    <div class="card h-100 border-0 shadow-sm card-hover overflow-hidden">
+                        <div class="position-relative">
+                            <img src="@(string.IsNullOrEmpty(r.Image) ? "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=500&auto=format&fit=crop&q=80" : r.Image)" 
+                                 class="card-img-top" 
+                                 alt="@r.Name" 
+                                 style="height: 200px; object-fit: cover;" />
+                            <span class="badge bg-dark bg-opacity-75 text-white position-absolute top-0 start-0 m-3 px-2 py-1 rounded-pill small">
+                                <i class="bi bi-clock me-1"></i> @r.OpeningTime.ToString(@"hh\:mm") - @r.ClosingTime.ToString(@"hh\:mm")
+                            </span>
+                            @if (r.Rating > 0)
+                            {
+                                <span class="badge bg-warning text-dark position-absolute top-0 end-0 m-3 px-2 py-1 rounded-pill fw-bold shadow-sm">
+                                    <i class="bi bi-star-fill me-1"></i> @r.Rating.ToString("0.0")
+                                </span>
+                            }
+                        </div>
+                        <div class="card-body p-4 d-flex flex-column">
+                            <h5 class="fw-bold text-dark mb-1">@r.Name</h5>
+                            <p class="text-muted small mb-2"><i class="bi bi-geo-alt-fill text-danger me-1"></i> @r.City, @r.Address</p>
+                            <p class="card-text text-secondary small flex-grow-1" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
+                                @r.Description
+                            </p>
+                            <div class="d-flex justify-content-between align-items-center mt-3 pt-3 border-top">
+                                <span class="badge bg-light text-dark fw-normal"><i class="bi bi-egg-fried me-1 text-primary"></i> @r.FoodItems.Count menu items</span>
+                                <a asp-action="Details" asp-route-id="@r.Id" class="btn btn-sm btn-primary rounded-pill px-4">
+                                    View Menu
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>

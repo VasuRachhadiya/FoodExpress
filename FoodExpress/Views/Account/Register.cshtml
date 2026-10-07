@@ -1,0 +1,95 @@
+@model FoodExpress.ViewModels.RegisterViewModel
+@{
+    ViewData["Title"] = "Create an Account";
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-9 col-lg-6">
+            <div class="card border-0 shadow-sm rounded-4 p-4 p-md-5 bg-white">
+                <div class="text-center mb-4">
+                    <div class="brand-icon mx-auto mb-2 d-inline-flex align-items-center justify-content-center bg-primary text-white rounded-circle shadow-sm" style="width: 50px; height: 50px;">
+                        <i class="bi bi-person-plus fs-4"></i>
+                    </div>
+                    <h3 class="fw-bold mb-1">Get Started</h3>
+                    <p class="text-muted small">Join FoodExpress as a diner or restaurant owner</p>
+                </div>
+
+                <form asp-action="Register" method="post">
+                    @Html.AntiForgeryToken()
+                    <div asp-validation-summary="ModelOnly" class="text-danger small mb-3"></div>
+
+                    <!-- Role Selection -->
+                    <div class="mb-4">
+                        <label class="form-label small fw-semibold d-block text-muted">I want to register as:</label>
+                        <div class="row g-2">
+                            <div class="col-6">
+                                <input type="radio" class="btn-check" name="Role" id="roleCustomer" value="Customer" checked>
+                                <label class="btn btn-outline-primary w-100 py-2 rounded-3 text-center" for="roleCustomer">
+                                    <i class="bi bi-person-fill d-block fs-5 mb-1"></i>
+                                    <span class="small fw-bold">Customer</span>
+                                </label>
+                            </div>
+                            <div class="col-6">
+                                <input type="radio" class="btn-check" name="Role" id="roleOwner" value="RestaurantOwner">
+                                <label class="btn btn-outline-primary w-100 py-2 rounded-3 text-center" for="roleOwner">
+                                    <i class="bi bi-shop d-block fs-5 mb-1"></i>
+                                    <span class="small fw-bold">Restaurant Owner</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="FullName" class="form-label small fw-semibold">Full Name</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-end-0"><i class="bi bi-person"></i></span>
+                            <input asp-for="FullName" class="form-control border-start-0" placeholder="Jane Doe" required />
+                        </div>
+                        <span asp-validation-for="FullName" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Email" class="form-label small fw-semibold">Email Address</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-end-0"><i class="bi bi-envelope"></i></span>
+                            <input asp-for="Email" class="form-control border-start-0" placeholder="jane@example.com" required />
+                        </div>
+                        <span asp-validation-for="Email" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="PhoneNumber" class="form-label small fw-semibold">Phone Number</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-end-0"><i class="bi bi-telephone"></i></span>
+                            <input asp-for="PhoneNumber" class="form-control border-start-0" placeholder="+91 98765 43210" required />
+                        </div>
+                        <span asp-validation-for="PhoneNumber" class="text-danger small"></span>
+                    </div>
+
+                    <div class="row g-2 mb-4">
+                        <div class="col-md-6">
+                            <label asp-for="Password" class="form-label small fw-semibold">Password</label>
+                            <input asp-for="Password" type="password" class="form-control" placeholder="••••••••" required />
+                            <span asp-validation-for="Password" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="ConfirmPassword" class="form-label small fw-semibold">Confirm Password</label>
+                            <input asp-for="ConfirmPassword" type="password" class="form-control" placeholder="••••••••" required />
+                            <span asp-validation-for="ConfirmPassword" class="text-danger small"></span>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary rounded-pill w-100 py-2 fw-bold shadow-sm">
+                        Create Account
+                    </button>
+                </form>
+
+                <div class="text-center mt-4 pt-3 border-top small text-muted">
+                    Already have an account? 
+                    <a asp-action="Login" class="text-primary fw-bold text-decoration-none ms-1">Sign In</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

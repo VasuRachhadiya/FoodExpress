@@ -1,0 +1,46 @@
+@model FoodExpress.Models.FoodCategory
+@{
+    ViewData["Title"] = "Create Food Category";
+}
+
+<div class="py-2">
+    <div class="row justify-content-center">
+        <div class="col-lg-7">
+            <div class="mb-4">
+                <a asp-action="Index" class="text-decoration-none text-muted small"><i class="bi bi-arrow-left"></i> Back to Categories</a>
+                <h2 class="fw-bold mb-1 mt-2">Add New Category</h2>
+                <p class="text-muted mb-0">Create a culinary category to classify dishes.</p>
+            </div>
+
+            <div class="card border-0 shadow-sm rounded-4 p-4 p-md-5 bg-white">
+                <form asp-action="Create" method="post" enctype="multipart/form-data">
+                    @Html.AntiForgeryToken()
+                    <div asp-validation-summary="ModelOnly" class="text-danger small mb-3"></div>
+
+                    <div class="mb-3">
+                        <label asp-for="Name" class="form-label small fw-semibold">Category Name <span class="text-danger">*</span></label>
+                        <input asp-for="Name" class="form-control rounded-3" placeholder="e.g. Burgers, Pizza, Sushi, Desserts" required />
+                        <span asp-validation-for="Name" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Description" class="form-label small fw-semibold">Description</label>
+                        <textarea asp-for="Description" class="form-control rounded-3" rows="3" placeholder="Short description of this cuisine or menu type"></textarea>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label small fw-semibold">Category Icon / Image</label>
+                        <input type="file" name="imageFile" class="form-control rounded-3" accept="image/*" />
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary rounded-pill px-5 py-2">
+                            Create Category
+                        </button>
+                        <a asp-action="Index" class="btn btn-light rounded-pill px-4 py-2">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

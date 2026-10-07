@@ -1,0 +1,135 @@
+@model IEnumerable<FoodExpress.Models.Order>
+@{
+    ViewData["Title"] = "Manage Orders";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="fw-bold mb-1">Customer Orders</h2>
+        <p class="text-muted mb-0">Track and manage system-wide food delivery orders.</p>
+    </div>
+</div>
+
+<!-- Filters Card -->
+<div class="card border-0 shadow-sm rounded-4 mb-4">
+    <div class="card-body p-3">
+        <form method="get" class="row g-2 align-items-center">
+            <div class="col-md-3">
+                <label class="form-label small text-muted mb-1">Order Status</label>
+                <select name="status" class="form-select form-select-sm" asp-items="Html.GetEnumSelectList<FoodExpress.Models.OrderStatus>()">
+                    <option value="">-- All Statuses --</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label small text-muted mb-1">Payment Status</label>
+                <select name="paymentStatus" class="form-select form-select-sm" asp-items="Html.GetEnumSelectList<FoodExpress.Models.PaymentStatus>()">
+                    <option value="">-- All Payments --</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label small text-muted mb-1">Order Date</label>
+                <input type="date" name="date" value="@ViewBag.SelectedDate" class="form-control form-control-sm" />
+            </div>
+            <div class="col-md-3 d-flex align-items-end gap-2 mt-auto">
+                <button type="submit" class="btn btn-sm btn-primary rounded-pill px-3">
+                    <i class="bi bi-funnel me-1"></i> Filter
+                </button>
+                <a asp-action="Index" class="btn btn-sm btn-outline-secondary rounded-pill px-3">Reset</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Orders Table Card -->
+<div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th class="ps-4">Order #</th>
+                        <th>Date &amp; Time</th>
+                        <th>Customer</th>
+                        <th>Restaurant</th>
+                        <th>Items</th>
+                        <th>Total</th>
+                        <th>Payment</th>
+                        <th>Status</th>
+                        <th class="text-end pe-4">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (!Model.Any())
+                    {
+                        <tr>
+                            <td colspan="9" class="text-center py-5 text-muted">
+                                <i class="bi bi-inbox fs-1 d-block mb-2 text-secondary opacity-50"></i>
+                                No orders found matching the filter criteria.
+                            </td>
+                        </tr>
+                    }
+                    else
+                    {
+                        @foreach (var order in Model)
+                        {
+                            <tr>
+                                <td class="ps-4 fw-bold text-dark">#@order.Id</td>
+                                <td class="small text-muted">
+                                    @order.OrderDate.ToString("dd MMM yyyy")<br />
+                                    <span class="text-secondary opacity-75">@order.OrderDate.ToString("hh:mm tt")</span>
+                                </td>
+                                <td>
+                                    <div class="fw-semibold text-dark">@(order.User?.FullName ?? "Guest")</div>
+                                    <div class="small text-muted">@(order.PhoneNumber ?? order.User?.PhoneNumber)</div>
+                                </td>
+                                <td>
+                                    <span class="fw-medium text-dark">@(order.Restaurant?.Name ?? "N/A")</span>
+                                </td>
+                                <td>
+                                    <span class="badge bg-light text-dark border">@order.OrderItems.Count items</span>
+                                </td>
+                                <td class="fw-bold text-dark">
+                                    ₹@order.TotalAmount.ToString("F2")
+                                </td>
+                                <td>
+                                    @{
+                                        var payBadge = order.PaymentStatus switch
+                                        {
+                                            FoodExpress.Models.PaymentStatus.Paid => "bg-success",
+                                            FoodExpress.Models.PaymentStatus.Pending => "bg-warning text-dark",
+                                            FoodExpress.Models.PaymentStatus.Failed => "bg-danger",
+                                            FoodExpress.Models.PaymentStatus.Refunded => "bg-secondary",
+                                            _ => "bg-secondary"
+                                        };
+                                    }
+                                    <span class="badge @payBadge rounded-pill px-2 py-1">@order.PaymentStatus</span>
+                                    <div class="small text-muted mt-1">@order.PaymentMethod</div>
+                                </td>
+                                <td>
+                                    @{
+                                        var statusBadge = order.OrderStatus switch
+                                        {
+                                            FoodExpress.Models.OrderStatus.Pending => "bg-warning text-dark",
+                                            FoodExpress.Models.OrderStatus.Confirmed => "bg-info text-dark",
+                                            FoodExpress.Models.OrderStatus.Preparing => "bg-primary",
+                                            FoodExpress.Models.OrderStatus.OutForDelivery => "bg-indigo text-white",
+                                            FoodExpress.Models.OrderStatus.Delivered => "bg-success",
+                                            FoodExpress.Models.OrderStatus.Cancelled => "bg-danger",
+                                            _ => "bg-secondary"
+                                        };
+                                    }
+                                    <span class="badge @statusBadge rounded-pill px-2 py-1">@order.OrderStatus</span>
+                                </td>
+                                <td class="text-end pe-4">
+                                    <a asp-action="Details" asp-route-id="@order.Id" class="btn btn-sm btn-outline-primary rounded-pill px-3">
+                                        <i class="bi bi-eye me-1"></i> Details
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

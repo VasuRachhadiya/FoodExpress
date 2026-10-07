@@ -1,0 +1,102 @@
+@model List<FoodExpress.ViewModels.OrderListViewModel>
+@{
+    ViewData["Title"] = "My Orders";
+}
+
+<div class="container py-5">
+    <div class="row mb-4 align-items-center">
+        <div class="col-md-6">
+            <h1 class="fw-bold mb-1"><i class="bi bi-receipt-cutoff text-primary me-2"></i> My Orders</h1>
+            <p class="text-muted mb-0">View your order history and track active deliveries.</p>
+        </div>
+        <div class="col-md-6 text-md-end mt-3 mt-md-0">
+            <a asp-controller="Restaurants" asp-action="Index" class="btn btn-outline-primary rounded-pill px-4">
+                <i class="bi bi-plus-lg me-1"></i> Order New Meal
+            </a>
+        </div>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="text-center py-5 bg-white rounded-4 shadow-sm p-5 border">
+            <i class="bi bi-bag-x text-muted" style="font-size: 4rem;"></i>
+            <h4 class="fw-bold mt-3">No orders found</h4>
+            <p class="text-muted mb-4">You haven't placed any food orders yet.</p>
+            <a asp-controller="Restaurants" asp-action="Index" class="btn btn-primary rounded-pill px-4">
+                Explore Restaurants
+            </a>
+        </div>
+    }
+    else
+    {
+        <div class="card border-0 shadow-sm rounded-4 overflow-hidden bg-white">
+            <div class="table-responsive">
+                <table class="table align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th scope="col" class="ps-4">Order #</th>
+                            <th scope="col">Restaurant</th>
+                            <th scope="col">Date</th>
+                            <th scope="col">Total</th>
+                            <th scope="col">Payment</th>
+                            <th scope="col">Order Status</th>
+                            <th scope="col" class="text-end pe-4">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var order in Model)
+                        {
+                            <tr>
+                                <td class="ps-4 py-3 fw-bold text-primary">
+                                    #@order.Id
+                                </td>
+                                <td>
+                                    <div class="fw-semibold text-dark">@order.RestaurantName</div>
+                                    <div class="text-muted small">@order.TotalItems item(s)</div>
+                                </td>
+                                <td class="small text-secondary">
+                                    @order.OrderDate.ToString("dd MMM yyyy, hh:mm tt")
+                                </td>
+                                <td class="fw-bold text-dark">
+                                    ₹@order.TotalAmount.ToString("F2")
+                                </td>
+                                <td>
+                                    <span class="badge @(order.PaymentStatus == PaymentStatus.Paid ? "bg-success" : (order.PaymentStatus == PaymentStatus.Failed ? "bg-danger" : "bg-warning text-dark")) rounded-pill">
+                                        @order.PaymentStatus
+                                    </span>
+                                </td>
+                                <td>
+                                    @{
+                                        var badgeClass = order.OrderStatus switch
+                                        {
+                                            OrderStatus.Pending => "bg-warning text-dark",
+                                            OrderStatus.Confirmed => "bg-info text-dark",
+                                            OrderStatus.Preparing => "bg-primary",
+                                            OrderStatus.OutForDelivery => "bg-indigo text-white",
+                                            OrderStatus.Delivered => "bg-success",
+                                            OrderStatus.Cancelled => "bg-danger",
+                                            _ => "bg-secondary"
+                                        };
+                                    }
+                                    <span class="badge @badgeClass rounded-pill px-3 py-1">
+                                        @order.OrderStatus
+                                    </span>
+                                </td>
+                                <td class="text-end pe-4">
+                                    <div class="d-inline-flex gap-2">
+                                        <a asp-action="Track" asp-route-id="@order.Id" class="btn btn-sm btn-outline-primary rounded-pill px-3" title="Track Live Status">
+                                            <i class="bi bi-geo-alt-fill me-1"></i> Track
+                                        </a>
+                                        <a asp-action="Details" asp-route-id="@order.Id" class="btn btn-sm btn-light rounded-pill px-3" title="View Details">
+                                            Invoice
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+</div>

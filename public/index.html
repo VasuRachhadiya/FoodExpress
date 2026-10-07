@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FoodExpress - Academic Project &amp; Live Platform Showcase</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>
+        :root {
+            --primary: #ff4757;
+            --primary-hover: #ee3747;
+            --secondary: #2f3542;
+            --dark: #1e272e;
+            --light-bg: #f8fafc;
+            --card-shadow: 0 10px 30px rgba(0,0,0,0.06);
+            --card-hover: 0 16px 40px rgba(255, 71, 87, 0.16);
+            --radius-lg: 18px;
+            --radius-md: 12px;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--light-bg);
+            color: #334155;
+            overflow-x: hidden;
+        }
+
+        .brand-icon {
+            width: 42px;
+            height: 42px;
+            background: linear-gradient(135deg, #ff4757, #ff6b81);
+            color: #fff;
+            border-radius: 12px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.35rem;
+        }
+
+        .btn-primary-custom {
+            background: linear-gradient(135deg, #ff4757, #ff6348);
+            border: none;
+            color: white;
+            font-weight: 600;
+            padding: 10px 24px;
+            border-radius: 50px;
+            transition: all 0.25s ease;
+            box-shadow: 0 6px 16px rgba(255, 71, 87, 0.25);
+        }
+
+        .btn-primary-custom:hover {
+            background: linear-gradient(135deg, #ee3747, #e05638);
+            transform: translateY(-2px);
+            color: white;
+            box-shadow: 0 10px 24px rgba(255, 71, 87, 0.35);
+        }
+
+        .hero-section {
+            background: linear-gradient(135deg, #1e272e 0%, #2f3542 100%);
+            border-radius: 24px;
+            position: relative;
+            overflow: hidden;
+            color: white;
+            padding: 3.5rem 2.5rem;
+        }
+
+        .hero-section::after {
+            content: '';
+            position: absolute;
+            top: -40%;
+            right: -20%;
+            width: 480px;
+            height: 480px;
+            background: radial-gradient(circle, rgba(255,71,87,0.25) 0%, rgba(255,71,87,0) 70%);
+            pointer-events: none;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--card-shadow);
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        .glass-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--card-hover);
+        }
+
+        .cred-card {
+            border-left: 4px solid var(--primary);
+            background: white;
+            border-radius: var(--radius-md);
+            padding: 1rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.04);
+        }
+
+        .code-pill {
+            background: #f1f5f9;
+            padding: 3px 8px;
+            border-radius: 6px;
+            font-family: monospace;
+            font-size: 0.88rem;
+            color: #0f172a;
+        }
+
+        .tech-badge {
+            background: white;
+            color: #1e293b;
+            padding: 8px 16px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            border: 1px solid #e2e8f0;
+        }
+
+        /* Order Stepper Demo */
+        .stepper-demo {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+            margin: 25px 0;
+        }
+
+        .stepper-demo::before {
+            content: '';
+            position: absolute;
+            top: 22px;
+            left: 30px;
+            right: 30px;
+            height: 4px;
+            background: #e2e8f0;
+            z-index: 1;
+        }
+
+        .step-item {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            flex: 1;
+        }
+
+        .step-circle {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: #e2e8f0;
+            color: #64748b;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.15rem;
+            margin-bottom: 6px;
+            transition: all 0.3s;
+        }
+
+        .step-item.active .step-circle {
+            background: var(--primary);
+            color: #fff;
+            box-shadow: 0 0 0 5px rgba(255,71,87,0.25);
+        }
+
+        .step-item.completed .step-circle {
+            background: #10b981;
+            color: #fff;
+        }
+
+        .step-name {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #64748b;
+        }
+
+        .nav-pills .nav-link {
+            border-radius: 50px;
+            padding: 8px 20px;
+            font-weight: 600;
+            color: #475569;
+        }
+
+        .nav-pills .nav-link.active {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        footer {
+            background: #111827;
+            color: #94a3b8;
+            padding: 3rem 0;
+            margin-top: 5rem;
+        }
+
+        @media (max-width: 576px) {
+            .hero-section {
+                padding: 2rem 1.25rem;
+                border-radius: 16px;
+            }
+            .stepper-demo::before {
+                top: 17px;
+                left: 15px;
+                right: 15px;
+            }
+            .step-circle {
+                width: 34px;
+                height: 34px;
+                font-size: 0.9rem;
+            }
+            .step-name {
+                font-size: 0.65rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Navigation -->
+    <header class="sticky-top bg-white border-bottom shadow-sm">
+        <div class="container py-2">
+            <div class="d-flex justify-content-between align-items-center">
+                <a href="#" class="text-decoration-none d-flex align-items-center">
+                    <span class="brand-icon me-2 shadow-sm"><i class="bi bi-fire"></i></span>
+                    <span class="fw-bold fs-4 text-dark">Food<span class="text-danger">Express</span></span>
+                </a>
+                <div class="d-flex align-items-center gap-2">
+                    <span class="badge bg-danger rounded-pill px-3 py-2 fw-semibold d-none d-sm-inline">
+                        <i class="bi bi-mortarboard-fill me-1"></i> Academic Project
+                    </span>
+                    <a href="#deploySection" class="btn btn-sm btn-outline-dark rounded-pill px-3">
+                        <i class="bi bi-cloud-arrow-up me-1"></i> Deployment Guide
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="container py-4">
+
+        <!-- Hero Banner -->
+        <section class="hero-section shadow-lg mb-5" id="heroBanner">
+            <div class="row align-items-center position-relative" style="z-index: 2;">
+                <div class="col-lg-7">
+                    <span class="badge bg-danger text-uppercase px-3 py-2 rounded-pill fw-bold mb-3">
+                        <i class="bi bi-code-slash me-1"></i> Full-Stack ASP.NET Core 9.0 Architecture
+                    </span>
+                    <h1 class="display-4 fw-extrabold text-white mb-3">
+                        FoodExpress Online Platform
+                    </h1>
+                    <p class="lead text-light opacity-90 mb-4">
+                        A full-fledged food delivery and restaurant management system engineered with ASP.NET Core 9 MVC, Entity Framework Core, SQL Server, and responsive Bootstrap 5.
+                    </p>
+
+                    <div class="d-flex flex-wrap gap-2 mb-4">
+                        <span class="tech-badge"><i class="bi bi-check2-circle text-success"></i> ASP.NET Core 9 MVC</span>
+                        <span class="tech-badge"><i class="bi bi-database-check text-primary"></i> EF Core 9 &amp; SQL Server</span>
+                        <span class="tech-badge"><i class="bi bi-shield-lock-fill text-danger"></i> ASP.NET Identity &amp; Roles</span>
+                        <span class="tech-badge"><i class="bi bi-phone-fill text-warning"></i> 100% Mobile Responsive</span>
+                    </div>
+
+                    <div class="d-flex flex-wrap gap-3">
+                        <a href="#demoCredentials" class="btn btn-primary-custom" id="btnExploreDemo">
+                            <i class="bi bi-key-fill me-2"></i> View Demo Accounts
+                        </a>
+                        <a href="#features" class="btn btn-outline-light rounded-pill px-4 py-2" id="btnViewFeatures">
+                            <i class="bi bi-list-check me-2"></i> Explore Features
+                        </a>
+                    </div>
+                </div>
+
+                <div class="col-lg-5 text-center mt-4 mt-lg-0 d-none d-lg-block">
+                    <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=600&auto=format&fit=crop&q=80" 
+                         alt="Food Showcase" 
+                         class="img-fluid rounded-4 shadow-lg border border-4 border-white" 
+                         style="max-height: 340px; object-fit: cover; transform: rotate(1deg);" />
+                </div>
+            </div>
+        </section>
+
+        <!-- Demo Credentials Section -->
+        <section class="mb-5" id="demoCredentials">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <div>
+                    <span class="text-danger fw-bold text-uppercase small">Instant Testing</span>
+                    <h2 class="fw-bold mb-0">Role-Based Demo Credentials</h2>
+                </div>
+                <span class="text-muted small">Pre-seeded automatically at launch</span>
+            </div>
+
+            <div class="row g-3">
+                <!-- Admin Card -->
+                <div class="col-md-4">
+                    <div class="glass-card p-4 h-100">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="p-3 bg-danger bg-opacity-10 text-danger rounded-3 me-3 fs-4">
+                                <i class="bi bi-shield-lock-fill"></i>
+                            </div>
+                            <div>
+                                <span class="badge bg-danger rounded-pill">ROLE: Admin</span>
+                                <h5 class="fw-bold text-dark mb-0 mt-1">Platform Admin</h5>
+                            </div>
+                        </div>
+                        <p class="text-muted small mb-3">Full governance over all restaurants, categories, dishes, orders, coupons, reviews, and user accounts.</p>
+                        <div class="cred-card border-danger">
+                            <div class="small text-muted">Email:</div>
+                            <div class="fw-bold code-pill mb-2">admin@foodexpress.com</div>
+                            <div class="small text-muted">Password:</div>
+                            <div class="fw-bold code-pill">Admin@123</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Restaurant Owner Card -->
+                <div class="col-md-4">
+                    <div class="glass-card p-4 h-100">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="p-3 bg-warning bg-opacity-10 text-warning rounded-3 me-3 fs-4">
+                                <i class="bi bi-shop"></i>
+                            </div>
+                            <div>
+                                <span class="badge bg-warning text-dark rounded-pill">ROLE: RestaurantOwner</span>
+                                <h5 class="fw-bold text-dark mb-0 mt-1">Restaurant Partner</h5>
+                            </div>
+                        </div>
+                        <p class="text-muted small mb-3">Kitchen portal to manage menus, dishes, live order statuses (Confirmed, Cooking), and customer reviews.</p>
+                        <div class="cred-card border-warning">
+                            <div class="small text-muted">Email:</div>
+                            <div class="fw-bold code-pill mb-2">owner@foodexpress.com</div>
+                            <div class="small text-muted">Password:</div>
+                            <div class="fw-bold code-pill">Owner@123</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Customer Card -->
+                <div class="col-md-4">
+                    <div class="glass-card p-4 h-100">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="p-3 bg-success bg-opacity-10 text-success rounded-3 me-3 fs-4">
+                                <i class="bi bi-person-check-fill"></i>
+                            </div>
+                            <div>
+                                <span class="badge bg-success rounded-pill">ROLE: Customer</span>
+                                <h5 class="fw-bold text-dark mb-0 mt-1">Diner / Customer</h5>
+                            </div>
+                        </div>
+                        <p class="text-muted small mb-3">Browse multi-city restaurants, add dishes to cart, apply coupon discounts, and track delivery in real time.</p>
+                        <div class="cred-card border-success">
+                            <div class="small text-muted">Email:</div>
+                            <div class="fw-bold code-pill mb-2">customer@foodexpress.com</div>
+                            <div class="small text-muted">Password:</div>
+                            <div class="fw-bold code-pill">Customer@123</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Live Order Tracking Feature Highlight -->
+        <section class="mb-5">
+            <div class="glass-card p-4 p-md-5">
+                <div class="row align-items-center">
+                    <div class="col-lg-5 mb-4 mb-lg-0">
+                        <span class="badge bg-primary text-uppercase px-3 py-1 rounded-pill fw-bold mb-2">Feature Showcase</span>
+                        <h3 class="fw-bold mb-2">Real-Time Order Progression</h3>
+                        <p class="text-muted">
+                            FoodExpress features a live state-machine order progression workflow. As the restaurant kitchen updates an order status, customers see instantaneous progress feedback.
+                        </p>
+                        <ul class="list-unstyled small text-secondary">
+                            <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i> <strong>Pending:</strong> Order placed by customer</li>
+                            <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i> <strong>Confirmed:</strong> Restaurant kitchen accepts</li>
+                            <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i> <strong>Preparing:</strong> Chefs cooking the meal</li>
+                            <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i> <strong>Out For Delivery:</strong> Rider on the way</li>
+                            <li class="mb-0"><i class="bi bi-check-circle-fill text-success me-2"></i> <strong>Delivered:</strong> Completed successfully</li>
+                        </ul>
+                    </div>
+                    <div class="col-lg-7">
+                        <div class="p-4 bg-light rounded-4 border">
+                            <h6 class="fw-bold text-dark mb-3">Live Order #1042 - Status Preview</h6>
+                            <div class="stepper-demo">
+                                <div class="step-item completed">
+                                    <div class="step-circle"><i class="bi bi-receipt"></i></div>
+                                    <div class="step-name">Placed</div>
+                                </div>
+                                <div class="step-item completed">
+                                    <div class="step-circle"><i class="bi bi-check2"></i></div>
+                                    <div class="step-name">Confirmed</div>
+                                </div>
+                                <div class="step-item active">
+                                    <div class="step-circle"><i class="bi bi-fire"></i></div>
+                                    <div class="step-name">In Kitchen</div>
+                                </div>
+                                <div class="step-item">
+                                    <div class="step-circle"><i class="bi bi-bicycle"></i></div>
+                                    <div class="step-name">Out for Delivery</div>
+                                </div>
+                                <div class="step-item">
+                                    <div class="step-circle"><i class="bi bi-house-door"></i></div>
+                                    <div class="step-name">Delivered</div>
+                                </div>
+                            </div>
+                            <div class="p-3 bg-white rounded-3 border text-center mt-3">
+                                <span class="fw-bold text-primary"><i class="bi bi-hourglass-split me-1"></i> The kitchen is cooking your delicious meal</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- System Features Grid -->
+        <section class="mb-5" id="features">
+            <h2 class="fw-bold mb-4">Complete System Functionality</h2>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="glass-card p-4 h-100">
+                        <i class="bi bi-basket2-fill text-danger fs-2 mb-3 d-block"></i>
+                        <h5 class="fw-bold">Smart Cart &amp; Single-Kitchen Guard</h5>
+                        <p class="text-muted small mb-0">Persistent session-based shopping cart with automated single-restaurant validation to prevent order conflicts across different kitchens.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="glass-card p-4 h-100">
+                        <i class="bi bi-ticket-perforated-fill text-warning fs-2 mb-3 d-block"></i>
+                        <h5 class="fw-bold">Promo Codes &amp; Coupon Engine</h5>
+                        <p class="text-muted small mb-0">Dynamic coupon engine supporting percentage or flat currency discounts, minimum spend thresholds, and date validity checks.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="glass-card p-4 h-100">
+                        <i class="bi bi-star-half text-warning fs-2 mb-3 d-block"></i>
+                        <h5 class="fw-bold">Customer Ratings &amp; Reviews</h5>
+                        <p class="text-muted small mb-0">5-star customer feedback system with verified dining reviews and admin moderation controls.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="glass-card p-4 h-100">
+                        <i class="bi bi-cash-coin text-success fs-2 mb-3 d-block"></i>
+                        <h5 class="fw-bold">Flexible Payment Gateways</h5>
+                        <p class="text-muted small mb-0">Supports Cash on Delivery (COD) and instant simulated card payments with automatic payment status tracking.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="glass-card p-4 h-100">
+                        <i class="bi bi-graph-up-arrow text-primary fs-2 mb-3 d-block"></i>
+                        <h5 class="fw-bold">Analytics &amp; Sales Reporting</h5>
+                        <p class="text-muted small mb-0">Real-time revenue metrics, completed vs pending order statistics, top-selling food items, and monthly sales graphs.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="glass-card p-4 h-100">
+                        <i class="bi bi-phone-fill text-info fs-2 mb-3 d-block"></i>
+                        <h5 class="fw-bold">Universal Device Responsiveness</h5>
+                        <p class="text-muted small mb-0">Mobile-first design with offcanvas drawers, responsive cart tables, fluid headers, and touch-optimized buttons for smartphones and tablets.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Deployment Architecture & Vercel Guide -->
+        <section class="mb-5" id="deploySection">
+            <div class="glass-card p-4 p-md-5">
+                <span class="badge bg-dark text-uppercase px-3 py-1 rounded-pill fw-bold mb-2">Cloud Hosting Architecture</span>
+                <h3 class="fw-bold mb-3">Hosting ASP.NET Core &amp; Vercel Deployment</h3>
+
+                <div class="alert alert-info border-0 rounded-4 p-4 mb-4">
+                    <div class="d-flex align-items-start">
+                        <i class="bi bi-info-circle-fill fs-3 text-info me-3 mt-1"></i>
+                        <div>
+                            <h5 class="fw-bold mb-1">How Vercel Works with This Project</h5>
+                            <p class="mb-0 text-secondary">
+                                <strong>Vercel</strong> is optimized for frontend static sites, Next.js, and serverless Node.js functions. Because ASP.NET Core 9 is a compiled C# backend requiring a long-running .NET Kestrel server and SQL Server database, this repo includes a configured <code>vercel.json</code> and static showcase so your project deploys smoothly to Vercel without build errors.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <h5 class="fw-bold mt-4 mb-3">Top 3 Free Deployment Options for ASP.NET Core + MSSQL:</h5>
+
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <div class="p-3 bg-light rounded-4 border h-100">
+                            <span class="badge bg-success mb-2">Recommended for Students</span>
+                            <h6 class="fw-bold">1. MonsterASP.NET (100% Free)</h6>
+                            <p class="small text-muted mb-2">Designed specifically for ASP.NET Core and MS SQL Server academic projects. No credit card required.</p>
+                            <span class="code-pill">Visual Studio / Git / FTP</span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="p-3 bg-light rounded-4 border h-100">
+                            <span class="badge bg-primary mb-2">Docker Container</span>
+                            <h6 class="fw-bold">2. Render.com / Railway</h6>
+                            <p class="small text-muted mb-2">Uses the included multi-stage <code>Dockerfile</code>. Connect your GitHub repo, and Render will build and host it automatically.</p>
+                            <span class="code-pill">Dockerfile included</span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="p-3 bg-light rounded-4 border h-100">
+                            <span class="badge bg-info text-dark mb-2">Microsoft Cloud</span>
+                            <h6 class="fw-bold">3. Azure App Service (F1 Free)</h6>
+                            <p class="small text-muted mb-2">Microsoft's native cloud hosting for .NET applications with integrated Azure SQL database free tier.</p>
+                            <span class="code-pill">Azure Web App F1</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-4 bg-dark text-white rounded-4 mt-4">
+                    <h6 class="fw-bold text-white mb-2"><i class="bi bi-terminal-fill text-warning me-2"></i> How to Run Locally in 1 Command:</h6>
+                    <pre class="mb-0 text-light"><code>cd FoodExpress
+dotnet run</code></pre>
+                    <p class="small text-secondary mb-0 mt-2">The application will automatically initialize and seed the SQL Server database with roles, restaurants, menu items, and demo accounts!</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container text-center">
+            <div class="d-flex justify-content-center align-items-center mb-3">
+                <span class="brand-icon me-2"><i class="bi bi-fire"></i></span>
+                <span class="fw-bold fs-4 text-white">Food<span class="text-danger">Express</span></span>
+            </div>
+            <p class="small mb-2">Academic Full-Stack Project &bull; Built with ASP.NET Core 9.0 MVC, Entity Framework Core, SQL Server &amp; Bootstrap 5</p>
+            <p class="small text-secondary mb-0">&copy; FoodExpress Academic Submission. Designed for high performance and universal mobile responsiveness.</p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

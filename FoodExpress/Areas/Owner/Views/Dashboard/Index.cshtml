@@ -1,0 +1,204 @@
+@model FoodExpress.ViewModels.OwnerDashboardViewModel
+@{
+    ViewData["Title"] = "Partner Dashboard";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="fw-bold mb-1">Partner Overview</h2>
+        <p class="text-muted mb-0">Monitor your restaurants, kitchen orders, revenue, and dishes.</p>
+    </div>
+    <a asp-area="Owner" asp-controller="FoodItems" asp-action="Create" class="btn btn-primary rounded-pill px-4">
+        <i class="bi bi-plus-circle me-1"></i> Add Food Item
+    </a>
+</div>
+
+<!-- Metrics Cards -->
+<div class="row g-3 mb-4">
+    <div class="col-sm-6 col-xl-3">
+        <div class="card border-0 shadow-sm rounded-4 p-3 bg-white">
+            <div class="d-flex align-items-center gap-3">
+                <div class="rounded-4 bg-success bg-opacity-10 p-3 text-success fs-3">
+                    <i class="bi bi-currency-rupee"></i>
+                </div>
+                <div>
+                    <span class="text-muted small">Total Revenue</span>
+                    <h3 class="fw-bold text-dark mb-0">₹@Model.TotalRevenue.ToString("F2")</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-xl-3">
+        <div class="card border-0 shadow-sm rounded-4 p-3 bg-white">
+            <div class="d-flex align-items-center gap-3">
+                <div class="rounded-4 bg-warning bg-opacity-10 p-3 text-warning fs-3">
+                    <i class="bi bi-hourglass-split"></i>
+                </div>
+                <div>
+                    <span class="text-muted small">Pending / Cooking</span>
+                    <h3 class="fw-bold text-dark mb-0">@(Model.PendingOrders + Model.PreparingOrders)</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-xl-3">
+        <div class="card border-0 shadow-sm rounded-4 p-3 bg-white">
+            <div class="d-flex align-items-center gap-3">
+                <div class="rounded-4 bg-primary bg-opacity-10 p-3 text-primary fs-3">
+                    <i class="bi bi-egg-fried"></i>
+                </div>
+                <div>
+                    <span class="text-muted small">Menu Items</span>
+                    <h3 class="fw-bold text-dark mb-0">@Model.TotalFoodItems</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-xl-3">
+        <div class="card border-0 shadow-sm rounded-4 p-3 bg-white">
+            <div class="d-flex align-items-center gap-3">
+                <div class="rounded-4 bg-info bg-opacity-10 p-3 text-info fs-3">
+                    <i class="bi bi-check2-circle"></i>
+                </div>
+                <div>
+                    <span class="text-muted small">Delivered Orders</span>
+                    <h3 class="fw-bold text-dark mb-0">@Model.CompletedOrders</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4 mb-4">
+    <!-- My Restaurants Overview -->
+    <div class="col-lg-6">
+        <div class="card border-0 shadow-sm rounded-4 p-4 bg-white h-100">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="fw-bold mb-0">My Restaurants (@Model.Restaurants.Count)</h5>
+                <a asp-controller="Restaurants" asp-action="Index" class="small text-primary fw-semibold text-decoration-none">Manage</a>
+            </div>
+            <div class="d-flex flex-column gap-3">
+                @foreach (var rest in Model.Restaurants)
+                {
+                    <div class="d-flex align-items-center gap-3 p-3 rounded-3 bg-light">
+                        <img src="@(string.IsNullOrEmpty(rest.Image) ? "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=200" : rest.Image)" 
+                             class="rounded-3" style="width: 60px; height: 60px; object-fit: cover;" alt="@rest.Name" />
+                        <div class="flex-grow-1">
+                            <h6 class="fw-bold text-dark mb-1">@rest.Name</h6>
+                            <div class="small text-muted mb-1"><i class="bi bi-geo-alt me-1"></i> @rest.City, @rest.Address</div>
+                            <span class="badge @(rest.IsActive ? "bg-success" : "bg-secondary") rounded-pill small">
+                                @(rest.IsActive ? "Accepting Orders" : "Currently Closed")
+                            </span>
+                        </div>
+                        <a asp-controller="Restaurants" asp-action="Edit" asp-route-id="@rest.Id" class="btn btn-sm btn-outline-secondary rounded-pill px-3">
+                            Edit
+                        </a>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions / Kitchen Status -->
+    <div class="col-lg-6">
+        <div class="card border-0 shadow-sm rounded-4 p-4 bg-white h-100">
+            <h5 class="fw-bold mb-3">Quick Navigation</h5>
+            <div class="row g-2">
+                <div class="col-6">
+                    <a asp-controller="Orders" asp-action="Index" asp-route-status="@FoodExpress.Models.OrderStatus.Pending" class="card text-decoration-none border p-3 rounded-4 bg-warning bg-opacity-10 text-dark h-100">
+                        <i class="bi bi-bell-fill fs-3 text-warning mb-2"></i>
+                        <h6 class="fw-bold mb-1">Pending Orders</h6>
+                        <span class="small text-muted">@Model.PendingOrders awaiting confirmation</span>
+                    </a>
+                </div>
+                <div class="col-6">
+                    <a asp-controller="Orders" asp-action="Index" asp-route-status="@FoodExpress.Models.OrderStatus.Preparing" class="card text-decoration-none border p-3 rounded-4 bg-primary bg-opacity-10 text-dark h-100">
+                        <i class="bi bi-fire fs-3 text-primary mb-2"></i>
+                        <h6 class="fw-bold mb-1">Kitchen In-Progress</h6>
+                        <span class="small text-muted">@Model.PreparingOrders preparing</span>
+                    </a>
+                </div>
+                <div class="col-6">
+                    <a asp-controller="FoodItems" asp-action="Index" class="card text-decoration-none border p-3 rounded-4 bg-light text-dark h-100">
+                        <i class="bi bi-card-list fs-3 text-secondary mb-2"></i>
+                        <h6 class="fw-bold mb-1">Menu Items</h6>
+                        <span class="small text-muted">@Model.TotalFoodItems active dishes</span>
+                    </a>
+                </div>
+                <div class="col-6">
+                    <a asp-controller="Reviews" asp-action="Index" class="card text-decoration-none border p-3 rounded-4 bg-light text-dark h-100">
+                        <i class="bi bi-star-fill fs-3 text-warning mb-2"></i>
+                        <h6 class="fw-bold mb-1">Reviews</h6>
+                        <span class="small text-muted">Customer feedback</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Recent Orders Table -->
+<div class="card border-0 shadow-sm rounded-4 overflow-hidden bg-white">
+    <div class="card-header bg-white py-3 px-4 border-0 d-flex justify-content-between align-items-center">
+        <h5 class="fw-bold mb-0">Recent Kitchen Orders</h5>
+        <a asp-controller="Orders" asp-action="Index" class="small text-primary fw-semibold text-decoration-none">View All Orders</a>
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th class="ps-4">Order #</th>
+                        <th>Time</th>
+                        <th>Restaurant</th>
+                        <th>Customer</th>
+                        <th>Total</th>
+                        <th>Status</th>
+                        <th class="text-end pe-4">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (!Model.RecentOrders.Any())
+                    {
+                        <tr>
+                            <td colspan="7" class="text-center py-4 text-muted">No orders received yet.</td>
+                        </tr>
+                    }
+                    else
+                    {
+                        @foreach (var order in Model.RecentOrders)
+                        {
+                            <tr>
+                                <td class="ps-4 fw-bold text-dark">#@order.Id</td>
+                                <td class="small text-muted">@order.OrderDate.ToString("hh:mm tt")</td>
+                                <td class="fw-medium text-dark">@(order.Restaurant?.Name)</td>
+                                <td>@(order.User?.FullName ?? "Customer")</td>
+                                <td class="fw-bold text-dark">₹@order.TotalAmount.ToString("F2")</td>
+                                <td>
+                                    @{
+                                        var badge = order.OrderStatus switch
+                                        {
+                                            FoodExpress.Models.OrderStatus.Pending => "bg-warning text-dark",
+                                            FoodExpress.Models.OrderStatus.Confirmed => "bg-info text-dark",
+                                            FoodExpress.Models.OrderStatus.Preparing => "bg-primary",
+                                            FoodExpress.Models.OrderStatus.OutForDelivery => "bg-indigo text-white",
+                                            FoodExpress.Models.OrderStatus.Delivered => "bg-success",
+                                            FoodExpress.Models.OrderStatus.Cancelled => "bg-danger",
+                                            _ => "bg-secondary"
+                                        };
+                                    }
+                                    <span class="badge @badge rounded-pill px-2 py-1">@order.OrderStatus</span>
+                                </td>
+                                <td class="text-end pe-4">
+                                    <a asp-controller="Orders" asp-action="Details" asp-route-id="@order.Id" class="btn btn-sm btn-outline-primary rounded-pill px-3">
+                                        Details
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

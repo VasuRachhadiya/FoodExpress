@@ -1,0 +1,162 @@
+@model FoodExpress.Models.ApplicationUser
+@{
+    ViewData["Title"] = $"User Details - {Model.FullName}";
+    var roles = ViewBag.Roles as IList<string> ?? new List<string>();
+    var allRoles = ViewBag.AllRoles as List<string> ?? new List<string>();
+}
+
+<div class="py-2">
+    <div class="mb-4">
+        <a asp-action="Index" class="text-decoration-none text-muted small"><i class="bi bi-arrow-left"></i> Back to Users</a>
+        <h2 class="fw-bold mb-1 mt-2">User Profile: @Model.FullName</h2>
+        <p class="text-muted mb-0">Detailed view of account properties and role assignments.</p>
+    </div>
+
+    <div class="row g-4">
+        <!-- User Info & Role Management Card -->
+        <div class="col-lg-5">
+            <div class="card border-0 shadow-sm rounded-4 p-4 bg-white mb-4">
+                <div class="d-flex align-items-center mb-4">
+                    <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center me-3 fw-bold fs-3" style="width: 70px; height: 70px;">
+                        @(Model.FullName.Length > 0 ? Model.FullName.Substring(0, 1).ToUpper() : "U")
+                    </div>
+                    <div>
+                        <h4 class="fw-bold mb-0 text-dark">@Model.FullName</h4>
+                        <span class="text-muted small">@Model.Email</span>
+                        <div class="mt-1">
+                            @foreach (var r in roles)
+                            {
+                                <span class="badge @(r == "Admin" ? "bg-danger" : (r == "RestaurantOwner" ? "bg-warning text-dark" : "bg-info text-dark")) rounded-pill me-1">
+                                    @r
+                                </span>
+                            }
+                            <span class="badge @(Model.IsActive ? "bg-success" : "bg-secondary") rounded-pill">
+                                @(Model.IsActive ? "Active" : "Deactivated")
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <ul class="list-group list-group-flush small mb-4">
+                    <li class="list-group-item px-0 py-2 d-flex justify-content-between">
+                        <span class="text-muted">User ID:</span>
+                        <span class="fw-semibold text-truncate ms-2" style="max-width: 220px;">@Model.Id</span>
+                    </li>
+                    <li class="list-group-item px-0 py-2 d-flex justify-content-between">
+                        <span class="text-muted">Phone:</span>
+                        <span class="fw-semibold">@(Model.PhoneNumber ?? "Not provided")</span>
+                    </li>
+                    <li class="list-group-item px-0 py-2 d-flex justify-content-between">
+                        <span class="text-muted">Joined Date:</span>
+                        <span class="fw-semibold">@Model.CreatedDate.ToString("dd MMMM yyyy")</span>
+                    </li>
+                    <li class="list-group-item px-0 py-2 d-flex justify-content-between">
+                        <span class="text-muted">Primary Address:</span>
+                        <span class="fw-semibold text-end">@(Model.Address ?? "None")</span>
+                    </li>
+                </ul>
+
+                <!-- Change Role Form -->
+                <div class="border-top pt-3 mb-3">
+                    <h6 class="fw-bold mb-2">Change Role</h6>
+                    <form asp-action="ChangeRole" asp-route-id="@Model.Id" method="post" class="d-flex gap-2">
+                        @Html.AntiForgeryToken()
+                        <select name="newRole" class="form-select form-select-sm rounded-3">
+                            @foreach (var r in allRoles)
+                            {
+                                <option value="@r" selected="@roles.Contains(r)">@r</option>
+                            }
+                        </select>
+                        <button type="submit" class="btn btn-sm btn-primary rounded-pill px-3 text-nowrap">
+                            Update Role
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Toggle Active Status Form -->
+                <div class="border-top pt-3">
+                    <form asp-action="ToggleStatus" asp-route-id="@Model.Id" method="post">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn btn-sm @(Model.IsActive ? "btn-outline-danger" : "btn-outline-success") rounded-pill w-100">
+                            <i class="bi @(Model.IsActive ? "bi-slash-circle" : "bi-check-circle") me-1"></i>
+                            @(Model.IsActive ? "Deactivate User Account" : "Activate User Account")
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Activity History (Owned Restaurants or Placed Orders) -->
+        <div class="col-lg-7">
+            <!-- Owned Restaurants -->
+            @if (roles.Contains("RestaurantOwner"))
+            {
+                <div class="card border-0 shadow-sm rounded-4 p-4 bg-white mb-4">
+                    <h5 class="fw-bold mb-3"><i class="bi bi-shop text-primary me-2"></i> Owned Restaurants (@Model.OwnedRestaurants.Count)</h5>
+                    @if (!Model.OwnedRestaurants.Any())
+                    {
+                        <p class="text-muted small mb-0">This owner currently has no restaurants assigned.</p>
+                    }
+                    else
+                    {
+                        <div class="list-group list-group-flush">
+                            @foreach (var res in Model.OwnedRestaurants)
+                            {
+                                <div class="list-group-item px-0 py-2 d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <div class="fw-bold text-dark">@res.Name</div>
+                                        <span class="text-muted small">@res.City, @res.Address</span>
+                                    </div>
+                                    <a asp-area="Admin" asp-controller="Restaurants" asp-action="Edit" asp-route-id="@res.Id" class="btn btn-xs btn-outline-secondary rounded-pill px-2 py-1">
+                                        Edit
+                                    </a>
+                                </div>
+                            }
+                        </div>
+                    }
+                </div>
+            }
+
+            <!-- Placed Orders -->
+            <div class="card border-0 shadow-sm rounded-4 p-4 bg-white">
+                <h5 class="fw-bold mb-3"><i class="bi bi-receipt text-primary me-2"></i> Customer Order History (@Model.Orders.Count)</h5>
+                @if (!Model.Orders.Any())
+                {
+                    <p class="text-muted small mb-0">No orders placed by this user yet.</p>
+                }
+                else
+                {
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0 small">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Order #</th>
+                                    <th>Date</th>
+                                    <th>Total</th>
+                                    <th>Status</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var ord in Model.Orders.OrderByDescending(o => o.OrderDate).Take(10))
+                                {
+                                    <tr>
+                                        <td class="fw-bold text-primary">#@ord.Id</td>
+                                        <td>@ord.OrderDate.ToString("dd MMM yyyy")</td>
+                                        <td class="fw-bold">₹@ord.TotalAmount.ToString("F2")</td>
+                                        <td><span class="badge bg-secondary rounded-pill">@ord.OrderStatus</span></td>
+                                        <td>
+                                            <a asp-area="Admin" asp-controller="Orders" asp-action="Details" asp-route-id="@ord.Id" class="btn btn-xs btn-light rounded-pill px-2">
+                                                Invoice
+                                            </a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

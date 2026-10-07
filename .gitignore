@@ -1,0 +1,59 @@
+## .NET & Visual Studio .gitignore for FoodExpress
+
+# Build and Output Folders
+bin/
+obj/
+out/
+[Bb]in/
+[Oo]bj/
+
+# Visual Studio temporary files
+.vs/
+*.user
+*.userprefs
+*.suo
+*.userosscache
+*.sln.docstates
+*.dbmdl
+
+# Visual Studio Code
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# Rider / JetBrains
+.idea/
+*.sln.iml
+
+# User-specific files
+*.rsuser
+*.suo
+*.user
+*.userprefs
+*.docstates
+
+# Mono / Mac / Linux OS
+.DS_Store
+Thumbs.db
+ehthumbs.db
+desktop.ini
+
+# Package directories
+packages/
+*.nupkg
+
+# Node modules / NPM (if any front-end build tools are used)
+node_modules/
+npm-debug.log
+
+# Entity Framework & SQL Server local artifacts
+*.mdf
+*.ldf
+*.ndf
+
+# Local Environment & Secrets
+appsettings.Local.json
+appsettings.Production.secrets.json
+.env

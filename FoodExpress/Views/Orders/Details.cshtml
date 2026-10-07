@@ -1,0 +1,133 @@
+@model FoodExpress.ViewModels.OrderDetailViewModel
+@{
+    var order = Model.Order;
+    ViewData["Title"] = $"Order #{order.Id} Details";
+}
+
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+        <div>
+            <a asp-action="Index" class="text-decoration-none text-muted small"><i class="bi bi-arrow-left"></i> Back to Orders</a>
+            <h1 class="fw-bold mb-0 mt-1">Invoice - Order #@order.Id</h1>
+        </div>
+        <div class="d-flex gap-2">
+            <a asp-action="Track" asp-route-id="@order.Id" class="btn btn-primary rounded-pill px-4">
+                <i class="bi bi-geo-alt-fill me-1"></i> Track Order
+            </a>
+            @if (Model.CanCancel)
+            {
+                <form asp-action="Cancel" asp-route-id="@order.Id" method="post" onsubmit="return confirm('Are you sure you want to cancel this order?');">
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="btn btn-outline-danger rounded-pill px-3">
+                        <i class="bi bi-x-circle me-1"></i> Cancel Order
+                    </button>
+                </form>
+            }
+        </div>
+    </div>
+
+    <div class="card border-0 shadow-sm rounded-4 p-4 p-md-5 bg-white mb-4">
+        <!-- Invoice Header -->
+        <div class="row pb-4 border-bottom g-4">
+            <div class="col-sm-6">
+                <span class="text-muted small text-uppercase tracking-wider">Restaurant / Vendor</span>
+                <h4 class="fw-bold text-dark mb-1">@order.Restaurant?.Name</h4>
+                <p class="text-secondary small mb-0">
+                    <i class="bi bi-geo-alt me-1"></i> @order.Restaurant?.Address, @order.Restaurant?.City<br />
+                    <i class="bi bi-telephone me-1"></i> @order.Restaurant?.Phone
+                </p>
+            </div>
+            <div class="col-sm-6 text-sm-end">
+                <span class="text-muted small text-uppercase tracking-wider">Order Reference</span>
+                <h4 class="fw-bold text-primary mb-1">#@order.Id</h4>
+                <p class="text-secondary small mb-1">Date: @order.OrderDate.ToString("dd MMMM yyyy, hh:mm tt")</p>
+                <div>
+                    <span class="badge bg-primary-subtle-custom text-primary px-3 py-1 rounded-pill me-1">Status: @order.OrderStatus</span>
+                    <span class="badge @(order.PaymentStatus == PaymentStatus.Paid ? "bg-success" : "bg-warning text-dark") px-3 py-1 rounded-pill">Payment: @order.PaymentStatus</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Customer & Delivery Address -->
+        <div class="row py-4 border-bottom g-4">
+            <div class="col-sm-6">
+                <h6 class="fw-bold text-uppercase small text-muted">Delivery Address</h6>
+                <p class="mb-0 text-dark fw-medium">@order.DeliveryAddress</p>
+                <span class="text-muted small">Phone: @order.PhoneNumber</span>
+            </div>
+            <div class="col-sm-6">
+                <h6 class="fw-bold text-uppercase small text-muted">Customer &amp; Instructions</h6>
+                <p class="mb-1 text-dark fw-medium">@(order.User?.FullName ?? "Customer") (@order.User?.Email)</p>
+                @if (!string.IsNullOrEmpty(order.OrderNotes))
+                {
+                    <p class="text-muted small mb-0"><em>Notes: @order.OrderNotes</em></p>
+                }
+                else
+                {
+                    <p class="text-muted small mb-0">No special delivery instructions provided.</p>
+                }
+            </div>
+        </div>
+
+        <!-- Itemized Table -->
+        <div class="table-responsive my-4">
+            <table class="table align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>Item</th>
+                        <th class="text-center">Quantity</th>
+                        <th class="text-end">Unit Price</th>
+                        <th class="text-end">Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in order.OrderItems)
+                    {
+                        <tr>
+                            <td>
+                                <div class="fw-bold text-dark">@item.FoodItem?.Name</div>
+                            </td>
+                            <td class="text-center fw-semibold">
+                                @item.Quantity
+                            </td>
+                            <td class="text-end text-muted">
+                                ₹@item.UnitPrice.ToString("F2")
+                            </td>
+                            <td class="text-end fw-bold text-dark">
+                                ₹@item.SubTotal.ToString("F2")
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Totals Summary -->
+        <div class="row justify-content-end">
+            <div class="col-md-5">
+                <div class="p-3 bg-light rounded-4">
+                    <div class="d-flex justify-content-between mb-2 small text-secondary">
+                        <span>Items Subtotal:</span>
+                        <span class="fw-semibold text-dark">₹@order.SubTotal.ToString("F2")</span>
+                    </div>
+                    @if (order.DiscountAmount > 0)
+                    {
+                        <div class="d-flex justify-content-between mb-2 small text-success">
+                            <span>Promo Discount:</span>
+                            <span class="fw-semibold">-₹@order.DiscountAmount.ToString("F2")</span>
+                        </div>
+                    }
+                    <div class="d-flex justify-content-between mb-3 small text-secondary">
+                        <span>Delivery Fee:</span>
+                        <span class="fw-semibold text-dark">₹@order.DeliveryFee.ToString("F2")</span>
+                    </div>
+                    <hr class="my-2" />
+                    <div class="d-flex justify-content-between">
+                        <span class="fw-bold fs-5 text-dark">Grand Total:</span>
+                        <span class="fw-extrabold fs-4 text-primary">₹@order.TotalAmount.ToString("F2")</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,74 @@
+@model IEnumerable<FoodExpress.Models.Restaurant>
+@{
+    ViewData["Title"] = "My Restaurants";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="fw-bold mb-1">My Restaurants</h2>
+        <p class="text-muted mb-0">Manage your business profile, operational hours, and contact details.</p>
+    </div>
+</div>
+
+<div class="row g-4">
+    @if (!Model.Any())
+    {
+        <div class="col-12 text-center py-5 text-muted">
+            <i class="bi bi-shop fs-1 d-block mb-2 text-secondary opacity-50"></i>
+            You currently have no restaurants assigned. Please contact the administrator.
+        </div>
+    }
+    else
+    {
+        @foreach (var rest in Model)
+        {
+            <div class="col-md-6 col-xl-4">
+                <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden bg-white card-hover">
+                    <div class="position-relative">
+                        <img src="@(string.IsNullOrEmpty(rest.Image) ? "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=500" : rest.Image)" 
+                             class="card-img-top" style="height: 180px; object-fit: cover;" alt="@rest.Name" />
+                        <span class="badge @(rest.IsActive ? "bg-success" : "bg-danger") position-absolute top-0 end-0 m-3 px-3 py-2 rounded-pill shadow-sm">
+                            @(rest.IsActive ? "Active / Open" : "Inactive / Closed")
+                        </span>
+                    </div>
+                    <div class="card-body p-4 d-flex flex-column">
+                        <h4 class="fw-bold text-dark mb-1">@rest.Name</h4>
+                        <p class="text-muted small mb-3">
+                            <i class="bi bi-geo-alt-fill text-danger me-1"></i> @rest.Address, @rest.City
+                        </p>
+                        <p class="card-text text-secondary small line-clamp-2 flex-grow-1">
+                            @rest.Description
+                        </p>
+
+                        <div class="bg-light p-3 rounded-3 mb-3 small">
+                            <div class="d-flex justify-content-between mb-1">
+                                <span class="text-muted"><i class="bi bi-clock me-1"></i> Hours:</span>
+                                <span class="fw-medium text-dark">@rest.OpeningTime.ToString(@"hh\:mm") - @rest.ClosingTime.ToString(@"hh\:mm")</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-1">
+                                <span class="text-muted"><i class="bi bi-telephone me-1"></i> Phone:</span>
+                                <span class="fw-medium text-dark">@rest.FormattedPhone</span>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <span class="text-muted"><i class="bi bi-egg-fried me-1"></i> Menu Items:</span>
+                                <span class="fw-bold text-primary">@rest.FoodItems.Count dishes</span>
+                            </div>
+                        </div>
+
+                        <div class="d-flex gap-2">
+                            <a asp-action="Edit" asp-route-id="@rest.Id" class="btn btn-primary rounded-pill px-3 flex-grow-1">
+                                <i class="bi bi-pencil me-1"></i> Edit Profile
+                            </a>
+                            <form asp-action="ToggleActive" asp-route-id="@rest.Id" method="post" class="d-inline">
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="btn @(rest.IsActive ? "btn-outline-danger" : "btn-outline-success") rounded-pill px-3" title="Toggle Status">
+                                    @(rest.IsActive ? "Close" : "Open")
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+</div>

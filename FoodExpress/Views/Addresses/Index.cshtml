@@ -1,0 +1,89 @@
+@model List<FoodExpress.Models.Address>
+@{
+    ViewData["Title"] = "Saved Addresses";
+}
+
+<div class="container py-5">
+    <div class="row mb-4 align-items-center">
+        <div class="col-md-6">
+            <h1 class="fw-bold mb-1"><i class="bi bi-geo-alt-fill text-primary me-2"></i> Saved Addresses</h1>
+            <p class="text-muted mb-0">Manage delivery locations for lightning-fast checkouts.</p>
+        </div>
+        <div class="col-md-6 text-md-end mt-3 mt-md-0">
+            <a asp-action="Create" class="btn btn-primary rounded-pill px-4">
+                <i class="bi bi-plus-lg me-1"></i> Add New Address
+            </a>
+        </div>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="text-center py-5 bg-white rounded-4 shadow-sm p-5 border">
+            <i class="bi bi-geo text-muted" style="font-size: 4rem;"></i>
+            <h4 class="fw-bold mt-3">No saved addresses</h4>
+            <p class="text-muted mb-4">Add your home or office address to order food in one click.</p>
+            <a asp-action="Create" class="btn btn-primary rounded-pill px-4">
+                Add Your First Address
+            </a>
+        </div>
+    }
+    else
+    {
+        <div class="row g-4">
+            @foreach (var addr in Model)
+            {
+                <div class="col-md-6 col-lg-4">
+                    <div class="card h-100 border-0 shadow-sm rounded-4 p-4 bg-white card-hover position-relative @(addr.IsDefault ? "border-primary border-2" : "")">
+                        @if (addr.IsDefault)
+                        {
+                            <span class="badge bg-primary position-absolute top-0 end-0 m-3 rounded-pill px-3 py-1">
+                                <i class="bi bi-check2-circle me-1"></i> Default
+                            </span>
+                        }
+
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="bg-light text-primary rounded-circle p-2 me-2 fs-5 d-inline-flex">
+                                <i class="bi bi-house-door-fill"></i>
+                            </div>
+                            <h5 class="fw-bold mb-0 text-dark">@addr.Title</h5>
+                        </div>
+
+                        <p class="text-secondary small mb-2 flex-grow-1">
+                            @addr.AddressLine<br />
+                            @addr.City, @addr.State @addr.PostalCode
+                        </p>
+
+                        <p class="text-muted small mb-3">
+                            <i class="bi bi-telephone me-1"></i> @addr.PhoneNumber
+                        </p>
+
+                        <div class="d-flex justify-content-between align-items-center pt-3 border-top gap-2">
+                            <div>
+                                @if (!addr.IsDefault)
+                                {
+                                    <form asp-action="SetDefault" asp-route-id="@addr.Id" method="post" class="d-inline">
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" class="btn btn-sm btn-outline-primary rounded-pill px-3">
+                                            Make Default
+                                        </button>
+                                    </form>
+                                }
+                            </div>
+                            <div class="d-flex gap-2">
+                                <a asp-action="Edit" asp-route-id="@addr.Id" class="btn btn-sm btn-light rounded-pill px-3" title="Edit">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                                <form asp-action="Delete" asp-route-id="@addr.Id" method="post" class="d-inline" onsubmit="return confirm('Delete this address?');">
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="btn btn-sm btn-outline-danger rounded-pill px-2" title="Delete">
+                                        <i class="bi bi-trash3"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>

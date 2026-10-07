@@ -1,0 +1,105 @@
+@model FoodExpress.Models.Restaurant
+@{
+    ViewData["Title"] = "Add New Restaurant";
+    var owners = ViewBag.Owners as List<FoodExpress.Models.ApplicationUser> ?? new();
+}
+
+<div class="py-2">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="mb-4">
+                <a asp-action="Index" class="text-decoration-none text-muted small"><i class="bi bi-arrow-left"></i> Back to Restaurants</a>
+                <h2 class="fw-bold mb-1 mt-2">Add New Restaurant</h2>
+                <p class="text-muted mb-0">Register a new restaurant kitchen to the FoodExpress network.</p>
+            </div>
+
+            <div class="card border-0 shadow-sm rounded-4 p-4 p-md-5 bg-white">
+                <form asp-action="Create" method="post" enctype="multipart/form-data">
+                    @Html.AntiForgeryToken()
+                    <div asp-validation-summary="All" class="text-danger small mb-3"></div>
+
+                    <div class="mb-3">
+                        <label asp-for="Name" class="form-label small fw-semibold">Restaurant Name <span class="text-danger">*</span></label>
+                        <input asp-for="Name" class="form-control rounded-3" placeholder="e.g. Bella Italia Bistro" required />
+                        <span asp-validation-for="Name" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Description" class="form-label small fw-semibold">Description</label>
+                        <textarea asp-for="Description" class="form-control rounded-3" rows="3" placeholder="Short culinary highlight, specialty cuisine..."></textarea>
+                        <span asp-validation-for="Description" class="text-danger small"></span>
+                    </div>
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-8">
+                            <label asp-for="Address" class="form-label small fw-semibold">Street Address <span class="text-danger">*</span></label>
+                            <input asp-for="Address" class="form-control rounded-3" placeholder="120 MG Road, Fort" required />
+                            <span asp-validation-for="Address" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-4">
+                            <label asp-for="City" class="form-label small fw-semibold">City <span class="text-danger">*</span></label>
+                            <input asp-for="City" class="form-control rounded-3" placeholder="Mumbai" required />
+                            <span asp-validation-for="City" class="text-danger small"></span>
+                        </div>
+                    </div>
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label asp-for="Phone" class="form-label small fw-semibold">Mobile / Phone Number <span class="text-danger">*</span></label>
+                            <input asp-for="Phone" class="form-control rounded-3" placeholder="+91 98765 43210" required />
+                            <span asp-validation-for="Phone" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="Email" class="form-label small fw-semibold">Email</label>
+                            <input asp-for="Email" type="email" class="form-control rounded-3" placeholder="info@restaurant.com" />
+                            <span asp-validation-for="Email" class="text-danger small"></span>
+                        </div>
+                    </div>
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label asp-for="OpeningTime" class="form-label small fw-semibold">Opening Time</label>
+                            <input asp-for="OpeningTime" type="time" class="form-control rounded-3" value="09:00" />
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="ClosingTime" class="form-label small fw-semibold">Closing Time</label>
+                            <input asp-for="ClosingTime" type="time" class="form-control rounded-3" value="22:00" />
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="OwnerId" class="form-label small fw-semibold">Assigned Restaurant Owner <span class="text-danger">*</span></label>
+                        <select asp-for="OwnerId" class="form-select rounded-3" required>
+                            <option value="">-- Select Registered Owner --</option>
+                            @foreach (var owner in owners)
+                            {
+                                <option value="@owner.Id">@owner.FullName (@owner.Email)</option>
+                            }
+                        </select>
+                        <span asp-validation-for="OwnerId" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label small fw-semibold">Banner Image</label>
+                        <input type="file" name="imageFile" class="form-control rounded-3" accept="image/*" />
+                        <span class="text-muted small">Upload high quality banner image (JPG, PNG, WEBP)</span>
+                    </div>
+
+                    <div class="form-check mb-4">
+                        <input class="form-check-input" type="checkbox" asp-for="IsActive" id="isActiveCheck" checked>
+                        <label class="form-check-label small fw-semibold" for="isActiveCheck">
+                            Publish Restaurant (Active on Public Storefront)
+                        </label>
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary rounded-pill px-5 py-2">
+                            Create Restaurant
+                        </button>
+                        <a asp-action="Index" class="btn btn-light rounded-pill px-4 py-2">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

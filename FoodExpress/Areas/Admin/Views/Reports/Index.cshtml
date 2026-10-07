@@ -1,0 +1,163 @@
+@model FoodExpress.ViewModels.ReportViewModel
+@{
+    ViewData["Title"] = "Business Analytics & Reports";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="fw-bold mb-1">Sales &amp; Business Reports</h2>
+        <p class="text-muted mb-0">Overview of system revenue, volume, top selling food items, and restaurant performance.</p>
+    </div>
+    <button onclick="window.print()" class="btn btn-outline-secondary rounded-pill px-3">
+        <i class="bi bi-printer me-1"></i> Print / Export Report
+    </button>
+</div>
+
+<!-- Stat Cards -->
+<div class="row g-3 mb-4">
+    <div class="col-sm-6 col-xl-3">
+        <div class="card border-0 shadow-sm rounded-4 p-3 bg-white">
+            <div class="d-flex align-items-center gap-3">
+                <div class="rounded-4 bg-success bg-opacity-10 p-3 text-success fs-3">
+                    <i class="bi bi-currency-rupee"></i>
+                </div>
+                <div>
+                    <span class="text-muted small">Total Revenue</span>
+                    <h3 class="fw-bold text-dark mb-0">₹@Model.TotalRevenue.ToString("F2")</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-xl-3">
+        <div class="card border-0 shadow-sm rounded-4 p-3 bg-white">
+            <div class="d-flex align-items-center gap-3">
+                <div class="rounded-4 bg-primary bg-opacity-10 p-3 text-primary fs-3">
+                    <i class="bi bi-receipt"></i>
+                </div>
+                <div>
+                    <span class="text-muted small">Total Orders</span>
+                    <h3 class="fw-bold text-dark mb-0">@Model.TotalOrdersCount</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-xl-3">
+        <div class="card border-0 shadow-sm rounded-4 p-3 bg-white">
+            <div class="d-flex align-items-center gap-3">
+                <div class="rounded-4 bg-info bg-opacity-10 p-3 text-info fs-3">
+                    <i class="bi bi-check-circle"></i>
+                </div>
+                <div>
+                    <span class="text-muted small">Completed Orders</span>
+                    <h3 class="fw-bold text-dark mb-0">@Model.CompletedOrdersCount</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-xl-3">
+        <div class="card border-0 shadow-sm rounded-4 p-3 bg-white">
+            <div class="d-flex align-items-center gap-3">
+                <div class="rounded-4 bg-warning bg-opacity-10 p-3 text-warning fs-3">
+                    <i class="bi bi-graph-up"></i>
+                </div>
+                <div>
+                    <span class="text-muted small">Avg Order Value</span>
+                    <h3 class="fw-bold text-dark mb-0">₹@Model.AverageOrderValue.ToString("F2")</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4 mb-4">
+    <!-- Daily Revenue Chart/Table -->
+    <div class="col-lg-6">
+        <div class="card border-0 shadow-sm rounded-4 p-4 bg-white h-100">
+            <h5 class="fw-bold mb-3">Daily Sales (Last 7 Days)</h5>
+            <div class="table-responsive">
+                <table class="table table-sm align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Date</th>
+                            <th>Orders</th>
+                            <th class="text-end">Revenue</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var day in Model.DailySales)
+                        {
+                            <tr>
+                                <td class="fw-medium text-dark">@day.Date</td>
+                                <td><span class="badge bg-light text-dark border">@day.OrdersCount orders</span></td>
+                                <td class="text-end fw-bold text-success">₹@day.Revenue.ToString("F2")</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Restaurant Performance -->
+    <div class="col-lg-6">
+        <div class="card border-0 shadow-sm rounded-4 p-4 bg-white h-100">
+            <h5 class="fw-bold mb-3">Top Performing Restaurants</h5>
+            <div class="table-responsive">
+                <table class="table table-sm align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Restaurant</th>
+                            <th>Total Orders</th>
+                            <th class="text-end">Revenue Generated</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var rest in Model.RestaurantSales)
+                        {
+                            <tr>
+                                <td class="fw-semibold text-dark"><i class="bi bi-shop me-1 text-primary"></i> @rest.RestaurantName</td>
+                                <td><span class="badge bg-light text-dark border">@rest.OrderCount orders</span></td>
+                                <td class="text-end fw-bold text-dark">₹@rest.TotalRevenue.ToString("F2")</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Most Popular Dishes -->
+<div class="card border-0 shadow-sm rounded-4 overflow-hidden bg-white mb-4">
+    <div class="card-header bg-white py-3 px-4 border-0">
+        <h5 class="fw-bold mb-0">Top 10 Most Ordered Food Items</h5>
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th class="ps-4">Rank</th>
+                        <th>Food Item</th>
+                        <th>Restaurant</th>
+                        <th>Total Sold</th>
+                        <th class="text-end pe-4">Total Revenue</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{ int rank = 1; }
+                    @foreach (var item in Model.TopFoodItems)
+                    {
+                        <tr>
+                            <td class="ps-4 fw-bold text-muted">#@(rank++)</td>
+                            <td class="fw-bold text-dark"><i class="bi bi-egg-fried me-2 text-warning"></i> @item.FoodName</td>
+                            <td><span class="text-secondary">@item.RestaurantName</span></td>
+                            <td><span class="badge bg-light text-primary border fs-6">@item.QuantitySold units</span></td>
+                            <td class="text-end pe-4 fw-bold text-success">₹@item.TotalRevenue.ToString("F2")</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

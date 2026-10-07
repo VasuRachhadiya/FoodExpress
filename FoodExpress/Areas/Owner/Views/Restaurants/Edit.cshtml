@@ -1,0 +1,101 @@
+@model FoodExpress.Models.Restaurant
+@{
+    ViewData["Title"] = $"Edit {Model.Name}";
+}
+
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="d-flex align-items-center mb-4">
+            <a asp-action="Index" class="btn btn-sm btn-outline-secondary rounded-pill me-3">
+                <i class="bi bi-arrow-left"></i>
+            </a>
+            <h2 class="fw-bold mb-0">Edit Restaurant Profile</h2>
+        </div>
+
+        <div class="card border-0 shadow-sm rounded-4 p-4 bg-white">
+            <form asp-action="Edit" method="post" enctype="multipart/form-data">
+                @Html.AntiForgeryToken()
+                <input type="hidden" asp-for="Id" />
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger rounded-3" role="alert"></div>
+
+                <div class="row g-3">
+                    <div class="col-12">
+                        <label asp-for="Name" class="form-label fw-semibold">Restaurant Name *</label>
+                        <input asp-for="Name" class="form-control" />
+                        <span asp-validation-for="Name" class="text-danger small"></span>
+                    </div>
+
+                    <div class="col-12">
+                        <label asp-for="Description" class="form-label fw-semibold">Description</label>
+                        <textarea asp-for="Description" class="form-control" rows="3"></textarea>
+                        <span asp-validation-for="Description" class="text-danger small"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="Phone" class="form-label fw-semibold">Mobile / Phone Number *</label>
+                        <input asp-for="Phone" class="form-control" placeholder="+91 98765 43210" />
+                        <span asp-validation-for="Phone" class="text-danger small"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="Email" class="form-label fw-semibold">Contact Email *</label>
+                        <input asp-for="Email" class="form-control" type="email" />
+                        <span asp-validation-for="Email" class="text-danger small"></span>
+                    </div>
+
+                    <div class="col-md-8">
+                        <label asp-for="Address" class="form-label fw-semibold">Street Address *</label>
+                        <input asp-for="Address" class="form-control" />
+                        <span asp-validation-for="Address" class="text-danger small"></span>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label asp-for="City" class="form-label fw-semibold">City *</label>
+                        <input asp-for="City" class="form-control" />
+                        <span asp-validation-for="City" class="text-danger small"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="OpeningTime" class="form-label fw-semibold">Opening Time *</label>
+                        <input asp-for="OpeningTime" class="form-control" type="time" />
+                        <span asp-validation-for="OpeningTime" class="text-danger small"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="ClosingTime" class="form-label fw-semibold">Closing Time *</label>
+                        <input asp-for="ClosingTime" class="form-control" type="time" />
+                        <span asp-validation-for="ClosingTime" class="text-danger small"></span>
+                    </div>
+
+                    <div class="col-12">
+                        <label class="form-label fw-semibold">Restaurant Cover Image</label>
+                        <input type="file" name="imageFile" class="form-control" accept="image/*" />
+                        @if (!string.IsNullOrEmpty(Model.Image))
+                        {
+                            <div class="mt-2">
+                                <span class="small text-muted d-block mb-1">Current Image:</span>
+                                <img src="@Model.Image" class="rounded-3" style="height: 100px; object-fit: cover;" alt="@Model.Name" />
+                            </div>
+                        }
+                    </div>
+
+                    <div class="col-12">
+                        <div class="form-check form-switch mt-2">
+                            <input asp-for="IsActive" class="form-check-input" type="checkbox" role="switch" />
+                            <label asp-for="IsActive" class="form-check-label fw-medium">Open / Active for Orders</label>
+                        </div>
+                    </div>
+
+                    <div class="col-12 pt-3 border-top d-flex gap-2">
+                        <button type="submit" class="btn btn-primary rounded-pill px-4">Save Changes</button>
+                        <a asp-action="Index" class="btn btn-outline-secondary rounded-pill px-4">Cancel</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

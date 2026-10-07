@@ -1,0 +1,522 @@
+:root {
+    --primary-color: #ff4757;
+    --primary-hover: #ee3747;
+    --primary-light: #fff0f1;
+    --secondary-color: #2f3542;
+    --accent-color: #ffa502;
+    --success-color: #2ed573;
+    --info-color: #1e90ff;
+    --warning-color: #ffa502;
+    --danger-color: #ff4757;
+    --bg-light: #f8f9fa;
+    --card-shadow: 0 10px 25px rgba(0,0,0,0.05);
+    --card-shadow-hover: 0 15px 35px rgba(255, 71, 87, 0.15);
+    --border-radius-lg: 16px;
+    --border-radius-md: 10px;
+    --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+body {
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background-color: #fdfdfd;
+    color: #2f3542;
+    overflow-x: hidden;
+}
+
+/* Typography & Brand */
+.brand-icon {
+    width: 38px;
+    height: 38px;
+    font-size: 1.25rem;
+    background: linear-gradient(135deg, #ff4757, #ff6b81) !important;
+}
+
+.brand-text {
+    font-size: 1.45rem;
+    letter-spacing: -0.5px;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #ff4757, #ff6348);
+    border: none;
+    font-weight: 600;
+    transition: var(--transition);
+}
+
+.btn-primary:hover, .btn-primary:focus {
+    background: linear-gradient(135deg, #ee3747, #e05638);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(255, 71, 87, 0.3);
+}
+
+.btn-outline-primary {
+    color: var(--primary-color);
+    border-color: var(--primary-color);
+    font-weight: 600;
+    transition: var(--transition);
+}
+
+.btn-outline-primary:hover {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(255, 71, 87, 0.2);
+}
+
+.text-primary {
+    color: var(--primary-color) !important;
+}
+
+.bg-primary-subtle-custom {
+    background-color: var(--primary-light) !important;
+}
+
+/* Card Design */
+.card-hover {
+    transition: var(--transition);
+    border-radius: var(--border-radius-lg);
+}
+
+.card-hover:hover {
+    transform: translateY(-6px);
+    box-shadow: var(--card-shadow-hover) !important;
+}
+
+.food-card-img-top {
+    height: 200px;
+    object-fit: cover;
+    border-top-left-radius: var(--border-radius-lg);
+    border-top-right-radius: var(--border-radius-lg);
+}
+
+.restaurant-banner-img {
+    height: 280px;
+    object-fit: cover;
+    width: 100%;
+    border-radius: var(--border-radius-lg);
+}
+
+/* Hero Section */
+.hero-banner {
+    background: linear-gradient(135deg, #2f3542 0%, #1e272e 100%);
+    border-radius: 24px;
+    position: relative;
+    overflow: hidden;
+}
+
+.hero-banner::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -20%;
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(255,71,87,0.2) 0%, rgba(255,71,87,0) 70%);
+    pointer-events: none;
+}
+
+/* Search Bar floating */
+.search-pill {
+    background: #fff;
+    border-radius: 50px;
+    padding: 6px 8px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+}
+
+/* Order Status Stepper */
+.tracking-stepper {
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+    margin: 30px 0;
+}
+
+.tracking-stepper::before {
+    content: '';
+    position: absolute;
+    top: 24px;
+    left: 40px;
+    right: 40px;
+    height: 4px;
+    background: #e9ecef;
+    z-index: 1;
+}
+
+.tracking-step {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    flex: 1;
+}
+
+.step-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: #e9ecef;
+    color: #6c757d;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    margin-bottom: 8px;
+    transition: var(--transition);
+}
+
+.tracking-step.active .step-icon {
+    background: var(--primary-color);
+    color: #fff;
+    box-shadow: 0 0 0 6px rgba(255,71,87,0.2);
+}
+
+.tracking-step.completed .step-icon {
+    background: var(--success-color);
+    color: #fff;
+}
+
+.step-label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #6c757d;
+}
+
+.tracking-step.active .step-label {
+    color: var(--primary-color);
+}
+
+.tracking-step.completed .step-label {
+    color: var(--success-color);
+}
+
+/* Footer Styling - High Contrast & Crisp */
+footer,
+.app-footer {
+    background-color: #1a1d24 !important;
+    border-top: 1px solid #2d333f !important;
+    color: #cbd5e1 !important;
+}
+
+footer p,
+footer span,
+footer li,
+footer small,
+footer .text-muted,
+.app-footer p,
+.app-footer span,
+.app-footer li,
+.app-footer small,
+.app-footer .text-muted,
+.app-footer .footer-desc {
+    color: #cbd5e1 !important;
+    line-height: 1.65;
+    font-size: 0.9rem;
+}
+
+footer a,
+footer a.text-muted,
+.app-footer a,
+.app-footer a.text-muted,
+.app-footer .footer-link {
+    color: #cbd5e1 !important;
+    font-size: 0.9rem;
+    display: inline-block;
+    transition: all 0.2s ease-in-out;
+}
+
+footer a:hover,
+footer a.text-muted:hover,
+.app-footer a:hover,
+.app-footer a.text-muted:hover,
+.app-footer .footer-link:hover {
+    color: #ffffff !important;
+    transform: translateX(4px);
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+}
+
+footer .footer-contact,
+.app-footer .footer-contact,
+footer .bi-telephone-fill + span,
+footer .bi-telephone-fill {
+    color: #ffffff !important;
+}
+
+footer hr,
+.app-footer hr {
+    border-color: #2d333f !important;
+    opacity: 0.6;
+}
+
+footer .footer-bottom,
+.app-footer .footer-bottom,
+footer .row.text-muted {
+    color: #94a3b8 !important;
+    font-size: 0.85rem;
+}
+
+footer .footer-input,
+footer input.form-control,
+.app-footer .footer-input,
+.app-footer input.form-control {
+    background-color: #262b35 !important;
+    border: 1px solid #3e4656 !important;
+    color: #ffffff !important;
+}
+
+footer input.form-control::placeholder,
+.app-footer input.form-control::placeholder,
+footer .footer-input::placeholder,
+.app-footer .footer-input::placeholder {
+    color: #94a3b8 !important;
+    opacity: 1;
+}
+
+footer input.form-control:focus,
+.app-footer input.form-control:focus,
+footer .footer-input:focus,
+.app-footer .footer-input:focus {
+    border-color: var(--primary-color) !important;
+    box-shadow: 0 0 0 3px rgba(255, 71, 87, 0.25) !important;
+    background-color: #2b313d !important;
+    color: #ffffff !important;
+}
+
+footer .btn-social,
+footer .btn-outline-secondary,
+.app-footer .btn-social,
+.app-footer .btn-outline-secondary {
+    color: #cbd5e1 !important;
+    border: 1px solid #3e4656 !important;
+    background-color: #262b35 !important;
+    transition: var(--transition);
+}
+
+footer .btn-social:hover,
+footer .btn-outline-secondary:hover,
+.app-footer .btn-social:hover,
+.app-footer .btn-outline-secondary:hover {
+    color: #ffffff !important;
+    background-color: var(--primary-color) !important;
+    border-color: var(--primary-color) !important;
+    transform: translateY(-2px);
+}
+
+/* Admin / Owner Sidebar */
+.dashboard-sidebar {
+    min-height: calc(100vh - 60px);
+    background-color: #ffffff;
+    border-right: 1px solid #edf2f7;
+}
+
+.sidebar-link {
+    display: flex;
+    align-items: center;
+    padding: 10px 18px;
+    border-radius: 10px;
+    color: #4a5568;
+    text-decoration: none;
+    font-weight: 500;
+    margin-bottom: 4px;
+    transition: var(--transition);
+}
+
+.sidebar-link:hover {
+    background-color: #f7fafc;
+    color: var(--primary-color);
+}
+
+.sidebar-link.active {
+    background: linear-gradient(135deg, rgba(255,71,87,0.1), rgba(255,99,72,0.15));
+    color: var(--primary-color);
+    font-weight: 700;
+}
+
+.sidebar-link i {
+    font-size: 1.2rem;
+    margin-right: 12px;
+}
+
+/* Live cart badge counter animation */
+.badge-bump {
+    animation: bump 300ms ease-out;
+}
+
+@keyframes bump {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.3); }
+    100% { transform: scale(1); }
+}
+
+/* Quantity selector controls */
+.qty-input {
+    width: 48px;
+    text-align: center;
+    border: none;
+    font-weight: 700;
+    background: transparent;
+}
+
+/* ==========================================================================
+   RESPONSIVE & MOBILE DEVICE OPTIMIZATIONS
+   ========================================================================== */
+
+/* Touch-friendly touch targets */
+@media (max-width: 768px) {
+    .btn, .form-control, .form-select {
+        font-size: 0.95rem;
+    }
+
+    .brand-text {
+        font-size: 1.25rem;
+    }
+
+    .brand-icon {
+        width: 34px;
+        height: 34px;
+        font-size: 1.1rem;
+    }
+
+    /* Demo topbar wrap */
+    .demo-topbar {
+        font-size: 0.75rem;
+        line-height: 1.4;
+    }
+
+    /* Hero section responsive spacing */
+    .hero-banner {
+        border-radius: 18px;
+        padding: 1.75rem 1.25rem !important;
+    }
+
+    .hero-banner h1 {
+        font-size: 1.85rem;
+    }
+
+    /* Mobile search pill */
+    .search-pill {
+        padding: 4px 6px;
+    }
+
+    .search-pill input {
+        font-size: 0.88rem;
+    }
+
+    .search-pill button {
+        padding: 6px 14px !important;
+        font-size: 0.85rem;
+    }
+
+    /* Table horizontal touch scroll */
+    .table-responsive {
+        -webkit-overflow-scrolling: touch;
+        border-radius: var(--border-radius-md);
+    }
+
+    /* Cart item responsive table layout */
+    .table td, .table th {
+        padding-top: 0.75rem;
+        padding-bottom: 0.75rem;
+    }
+
+    /* Restaurant banner on mobile */
+    .restaurant-banner-img {
+        height: 220px;
+    }
+}
+
+/* Stepper Responsiveness for Tablets and Medium Screens */
+@media (max-width: 768px) {
+    .tracking-stepper {
+        margin: 24px 0;
+    }
+
+    .tracking-stepper::before {
+        top: 20px;
+        left: 24px;
+        right: 24px;
+        height: 3px;
+    }
+
+    .step-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 1.1rem;
+        margin-bottom: 6px;
+    }
+
+    .step-label {
+        font-size: 0.75rem;
+    }
+}
+
+/* Stepper Responsiveness for Small Mobile Phones (<= 576px) */
+@media (max-width: 576px) {
+    .tracking-stepper {
+        margin: 18px 0;
+    }
+
+    .tracking-stepper::before {
+        top: 17px;
+        left: 16px;
+        right: 16px;
+        height: 3px;
+    }
+
+    .step-icon {
+        width: 34px;
+        height: 34px;
+        font-size: 0.95rem;
+        margin-bottom: 4px;
+    }
+
+    .tracking-step.active .step-icon {
+        box-shadow: 0 0 0 3px rgba(255, 71, 87, 0.25);
+    }
+
+    .step-label {
+        font-size: 0.65rem;
+        line-height: 1.15;
+        word-break: break-word;
+    }
+
+    .food-card-img-top {
+        height: 160px;
+    }
+
+    .restaurant-banner-img {
+        height: 180px;
+    }
+}
+
+/* Offcanvas Sidebar styling matching desktop admin/owner sidebars */
+.offcanvas {
+    max-width: 290px;
+}
+
+.offcanvas .sidebar-link {
+    display: flex;
+    align-items: center;
+    padding: 11px 16px;
+    border-radius: 10px;
+    color: #4a5568;
+    text-decoration: none;
+    font-weight: 500;
+    margin-bottom: 4px;
+    transition: var(--transition);
+}
+
+.offcanvas .sidebar-link:hover {
+    background-color: #f7fafc;
+    color: var(--primary-color);
+}
+
+.offcanvas .sidebar-link.active {
+    background: linear-gradient(135deg, rgba(255, 71, 87, 0.1), rgba(255, 99, 72, 0.15));
+    color: var(--primary-color);
+    font-weight: 700;
+}
+
+.offcanvas .sidebar-link i {
+    font-size: 1.2rem;
+    margin-right: 12px;
+}

@@ -1,0 +1,130 @@
+@model FoodExpress.ViewModels.OrderDetailViewModel
+@{
+    var order = Model.Order;
+    ViewData["Title"] = $"Live Tracking - Order #{order.Id}";
+
+    int currentStep = order.OrderStatus switch
+    {
+        OrderStatus.Pending => 1,
+        OrderStatus.Confirmed => 2,
+        OrderStatus.Preparing => 3,
+        OrderStatus.OutForDelivery => 4,
+        OrderStatus.Delivered => 5,
+        OrderStatus.Cancelled => 0,
+        _ => 1
+    };
+}
+
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+        <div>
+            <a asp-action="Index" class="text-decoration-none text-muted small"><i class="bi bi-arrow-left"></i> Back to Orders</a>
+            <h1 class="fw-bold mb-0 mt-1">Live Order Tracking</h1>
+        </div>
+        <div class="d-flex gap-2">
+            <button type="button" class="btn btn-outline-secondary rounded-pill px-3 btn-sm" onclick="window.location.reload();">
+                <i class="bi bi-arrow-clockwise me-1"></i> Refresh Status
+            </button>
+            <a asp-action="Details" asp-route-id="@order.Id" class="btn btn-light rounded-pill px-3 btn-sm">
+                View Invoice
+            </a>
+        </div>
+    </div>
+
+    <!-- Tracking Card -->
+    <div class="card border-0 shadow-sm rounded-4 p-4 p-md-5 bg-white mb-4">
+        <div class="d-flex justify-content-between align-items-center pb-4 border-bottom flex-wrap gap-2">
+            <div>
+                <span class="text-muted small">Tracking Order:</span>
+                <h4 class="fw-bold mb-0 text-primary">#@order.Id</h4>
+            </div>
+            <div class="text-md-end">
+                <span class="text-muted small">From Kitchen:</span>
+                <h5 class="fw-bold mb-0 text-dark">@order.Restaurant?.Name</h5>
+            </div>
+        </div>
+
+        @if (order.OrderStatus == OrderStatus.Cancelled)
+        {
+            <div class="alert alert-danger rounded-4 my-4 p-4 text-center">
+                <i class="bi bi-x-circle-fill fs-1 text-danger d-block mb-2"></i>
+                <h4 class="fw-bold">Order Cancelled</h4>
+                <p class="mb-0">This order has been cancelled and will not be prepared or delivered.</p>
+            </div>
+        }
+        else
+        {
+            <!-- Stepper -->
+            <div class="tracking-stepper my-5">
+                <div class="tracking-step @(currentStep >= 1 ? (currentStep > 1 ? "completed" : "active") : "")">
+                    <div class="step-icon"><i class="bi bi-receipt"></i></div>
+                    <div class="step-label">Order Placed</div>
+                </div>
+
+                <div class="tracking-step @(currentStep >= 2 ? (currentStep > 2 ? "completed" : "active") : "")">
+                    <div class="step-icon"><i class="bi bi-check2-circle"></i></div>
+                    <div class="step-label">Confirmed</div>
+                </div>
+
+                <div class="tracking-step @(currentStep >= 3 ? (currentStep > 3 ? "completed" : "active") : "")">
+                    <div class="step-icon"><i class="bi bi-fire"></i></div>
+                    <div class="step-label">In Kitchen</div>
+                </div>
+
+                <div class="tracking-step @(currentStep >= 4 ? (currentStep > 4 ? "completed" : "active") : "")">
+                    <div class="step-icon"><i class="bi bi-bicycle"></i></div>
+                    <div class="step-label">Out for Delivery</div>
+                </div>
+
+                <div class="tracking-step @(currentStep >= 5 ? "completed" : "")">
+                    <div class="step-icon"><i class="bi bi-house-door-fill"></i></div>
+                    <div class="step-label">Delivered</div>
+                </div>
+            </div>
+
+            <div class="p-4 bg-light rounded-4 text-center mb-4">
+                <h5 class="fw-bold text-dark mb-1">
+                    @switch (order.OrderStatus)
+                    {
+                        case OrderStatus.Pending:
+                            <span><i class="bi bi-hourglass-split text-warning me-1"></i> Waiting for restaurant confirmation</span>
+                            break;
+                        case OrderStatus.Confirmed:
+                            <span><i class="bi bi-check-circle text-info me-1"></i> Order accepted by restaurant</span>
+                            break;
+                        case OrderStatus.Preparing:
+                            <span><i class="bi bi-egg-fried text-primary me-1"></i> The kitchen is cooking your delicious meal</span>
+                            break;
+                        case OrderStatus.OutForDelivery:
+                            <span><i class="bi bi-bicycle text-indigo me-1"></i> Driver is on the way to your address</span>
+                            break;
+                        case OrderStatus.Delivered:
+                            <span><i class="bi bi-check-circle-fill text-success me-1"></i> Order delivered. Bon appétit!</span>
+                            break;
+                    }
+                </h5>
+                <p class="text-muted small mb-0">Delivery to: <strong>@order.DeliveryAddress</strong></p>
+            </div>
+        }
+
+        <!-- Order Items Review -->
+        <h6 class="fw-bold text-uppercase small text-muted mb-3">Order Contents</h6>
+        <div class="list-group list-group-flush border-top border-bottom mb-4">
+            @foreach (var item in order.OrderItems)
+            {
+                <div class="list-group-item d-flex justify-content-between align-items-center px-0 py-3 bg-transparent">
+                    <div>
+                        <span class="fw-bold text-dark">@item.Quantity x</span>
+                        <span class="text-dark">@item.FoodItem?.Name</span>
+                    </div>
+                    <span class="fw-semibold text-dark">₹@item.SubTotal.ToString("F2")</span>
+                </div>
+            }
+        </div>
+
+        <div class="d-flex justify-content-between align-items-center">
+            <span class="text-muted small">Total Paid (@order.PaymentMethod):</span>
+            <span class="fw-bold fs-5 text-primary">₹@order.TotalAmount.ToString("F2")</span>
+        </div>
+    </div>
+</div>

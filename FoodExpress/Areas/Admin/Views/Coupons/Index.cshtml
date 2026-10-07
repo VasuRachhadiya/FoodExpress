@@ -1,0 +1,102 @@
+@model IEnumerable<FoodExpress.Models.Coupon>
+@{
+    ViewData["Title"] = "Manage Coupons";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="fw-bold mb-1">Promo Coupons</h2>
+        <p class="text-muted mb-0">Create, activate, and manage customer discount codes.</p>
+    </div>
+    <a asp-action="Create" class="btn btn-primary rounded-pill px-4">
+        <i class="bi bi-plus-circle me-1"></i> Add New Coupon
+    </a>
+</div>
+
+<div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th class="ps-4">Code</th>
+                        <th>Description</th>
+                        <th>Discount</th>
+                        <th>Min Order</th>
+                        <th>Valid Period</th>
+                        <th>Status</th>
+                        <th class="text-end pe-4">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (!Model.Any())
+                    {
+                        <tr>
+                            <td colspan="7" class="text-center py-5 text-muted">
+                                <i class="bi bi-ticket-perforated fs-1 d-block mb-2 text-secondary opacity-50"></i>
+                                No coupons found. Click "Add New Coupon" to create one.
+                            </td>
+                        </tr>
+                    }
+                    else
+                    {
+                        @foreach (var coupon in Model)
+                        {
+                            var isExpired = coupon.EndDate < DateTime.UtcNow.Date;
+                            <tr>
+                                <td class="ps-4">
+                                    <span class="badge bg-light text-primary border fs-6 px-3 py-1 font-monospace">@coupon.Code</span>
+                                </td>
+                                <td>
+                                    <span class="text-dark">@coupon.Description</span>
+                                </td>
+                                <td>
+                                    <span class="fw-bold text-success">
+                                        @(coupon.DiscountType == FoodExpress.Models.DiscountType.Percentage ? $"{coupon.DiscountValue}% OFF" : $"₹{coupon.DiscountValue:F2} OFF")
+                                    </span>
+                                </td>
+                                <td>₹@coupon.MinimumOrderAmount.ToString("F2")</td>
+                                <td class="small text-muted">
+                                    @coupon.StartDate.ToString("dd MMM yyyy") - @coupon.EndDate.ToString("dd MMM yyyy")
+                                    @if (isExpired)
+                                    {
+                                        <span class="badge bg-danger rounded-pill ms-1">Expired</span>
+                                    }
+                                </td>
+                                <td>
+                                    @if (coupon.IsActive && !isExpired)
+                                    {
+                                        <span class="badge bg-success rounded-pill px-2 py-1">Active</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-secondary rounded-pill px-2 py-1">Inactive</span>
+                                    }
+                                </td>
+                                <td class="text-end pe-4">
+                                    <div class="d-inline-flex gap-2">
+                                        <form asp-action="ToggleActive" asp-route-id="@coupon.Id" method="post" class="d-inline">
+                                            @Html.AntiForgeryToken()
+                                            <button type="submit" class="btn btn-sm @(coupon.IsActive ? "btn-outline-warning" : "btn-outline-success") rounded-pill px-2" title="Toggle Active">
+                                                @(coupon.IsActive ? "Deactivate" : "Activate")
+                                            </button>
+                                        </form>
+                                        <a asp-action="Edit" asp-route-id="@coupon.Id" class="btn btn-sm btn-outline-primary rounded-pill px-2">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                        <form asp-action="Delete" asp-route-id="@coupon.Id" method="post" class="d-inline" onsubmit="return confirm('Are you sure you want to delete coupon @coupon.Code?');">
+                                            @Html.AntiForgeryToken()
+                                            <button type="submit" class="btn btn-sm btn-outline-danger rounded-pill px-2">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

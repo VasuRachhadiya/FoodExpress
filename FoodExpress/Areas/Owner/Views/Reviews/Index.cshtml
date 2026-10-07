@@ -1,0 +1,90 @@
+@model IEnumerable<FoodExpress.Models.Review>
+@{
+    ViewData["Title"] = "Customer Reviews";
+    var restaurants = ViewBag.Restaurants as List<FoodExpress.Models.Restaurant> ?? new List<FoodExpress.Models.Restaurant>();
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="fw-bold mb-1">Customer Reviews &amp; Ratings</h2>
+        <p class="text-muted mb-0">Read feedback from customers who ordered from your restaurants.</p>
+    </div>
+</div>
+
+<!-- Filter -->
+<div class="card border-0 shadow-sm rounded-4 mb-4">
+    <div class="card-body p-3">
+        <form method="get" class="row g-2 align-items-center">
+            <div class="col-md-5">
+                <select name="restaurantId" class="form-select form-select-sm">
+                    <option value="">-- All My Restaurants --</option>
+                    @foreach (var r in restaurants)
+                    {
+                        <option value="@r.Id" selected="@(ViewBag.SelectedRestaurantId == r.Id)">@r.Name</option>
+                    }
+                </select>
+            </div>
+            <div class="col-md-3 d-flex gap-2">
+                <button type="submit" class="btn btn-sm btn-primary rounded-pill px-3">Filter</button>
+                <a asp-action="Index" class="btn btn-sm btn-outline-secondary rounded-pill px-3">Reset</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Reviews List -->
+<div class="row g-3">
+    @if (!Model.Any())
+    {
+        <div class="col-12 text-center py-5 text-muted">
+            <i class="bi bi-chat-square-heart fs-1 d-block mb-2 text-secondary opacity-50"></i>
+            No reviews yet for your restaurants.
+        </div>
+    }
+    else
+    {
+        @foreach (var review in Model)
+        {
+            <div class="col-md-6">
+                <div class="card border-0 shadow-sm rounded-4 p-4 bg-white h-100">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <div>
+                            <h6 class="fw-bold text-dark mb-0">@(review.User?.FullName ?? "Customer")</h6>
+                            <span class="small text-muted">@review.CreatedDate.ToString("dd MMM yyyy")</span>
+                        </div>
+                        <div class="text-warning small">
+                            @for (int i = 1; i <= 5; i++)
+                            {
+                                if (i <= review.Rating)
+                                {
+                                    <i class="bi bi-star-fill"></i>
+                                }
+                                else
+                                {
+                                    <i class="bi bi-star text-secondary opacity-25"></i>
+                                }
+                            }
+                            <span class="fw-bold text-dark ms-1">(@review.Rating)</span>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <span class="badge bg-light text-primary border small">
+                            <i class="bi bi-shop me-1"></i> @review.Restaurant?.Name
+                        </span>
+                        @if (review.FoodItem != null)
+                        {
+                            <span class="badge bg-light text-secondary border small ms-1">
+                                <i class="bi bi-egg-fried me-1"></i> @review.FoodItem.Name
+                            </span>
+                        }
+                    </div>
+
+                    <p class="text-secondary mb-0 flex-grow-1">
+                        @review.Comment
+                    </p>
+                </div>
+            </div>
+        }
+    }
+</div>

@@ -1,0 +1,29 @@
+@{
+    ViewData["Title"] = "Privacy Policy";
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <h1 class="fw-bold mb-4">Privacy Policy</h1>
+            <p class="text-muted">Last updated: @DateTime.UtcNow.ToString("dd MMMM yyyy")</p>
+
+            <div class="card border-0 shadow-sm rounded-4 p-4 p-md-5 bg-white mb-4">
+                <h4 class="fw-bold">1. Information We Collect</h4>
+                <p class="text-secondary">
+                    FoodExpress collects necessary personal details including your name, contact phone number, email address, and delivery coordinates to fulfill your orders and keep you updated on delivery tracking.
+                </p>
+
+                <h4 class="fw-bold mt-4">2. Protection of Your Information</h4>
+                <p class="text-secondary">
+                    We employ enterprise-grade encryption and secure password hashing using ASP.NET Core Identity. Your sensitive credentials and billing tokens are never exposed or sold to third-party advertisers.
+                </p>
+
+                <h4 class="fw-bold mt-4">3. Cookies &amp; Local Storage</h4>
+                <p class="text-secondary">
+                    We use cookies and temporary session variables strictly to maintain your authenticated login session and retain items in your active shopping cart.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>

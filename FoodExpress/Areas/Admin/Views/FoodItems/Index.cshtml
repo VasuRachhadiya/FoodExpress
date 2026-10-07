@@ -1,0 +1,122 @@
+@model List<FoodExpress.Models.FoodItem>
+@{
+    ViewData["Title"] = "Food Items Catalog";
+    var restaurants = ViewBag.Restaurants as List<FoodExpress.Models.Restaurant> ?? new();
+    var categories = ViewBag.Categories as List<FoodExpress.Models.FoodCategory> ?? new();
+}
+
+<div class="py-2">
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+        <div>
+            <h2 class="fw-bold mb-1">Food Items</h2>
+            <p class="text-muted mb-0">Platform food inventory, pricing, and availability statuses.</p>
+        </div>
+        <div>
+            <a asp-action="Create" class="btn btn-primary rounded-pill px-4">
+                <i class="bi bi-plus-lg me-1"></i> Add Food Item
+            </a>
+        </div>
+    </div>
+
+    <!-- Filter Card -->
+    <div class="card border-0 shadow-sm rounded-4 p-3 mb-4 bg-white">
+        <form method="get" class="row g-3 align-items-center">
+            <div class="col-md-5">
+                <div class="input-group">
+                    <span class="input-group-text bg-light border-0"><i class="bi bi-search"></i></span>
+                    <input type="text" name="search" value="@ViewBag.Search" class="form-control bg-light border-0" placeholder="Search dish name or keyword..." />
+                </div>
+            </div>
+            <div class="col-md-3">
+                <select name="restaurantId" class="form-select bg-light border-0">
+                    <option value="">All Restaurants</option>
+                    @foreach (var res in restaurants)
+                    {
+                        <option value="@res.Id" selected="@(ViewBag.SelectedRestaurant == res.Id)">@res.Name</option>
+                    }
+                </select>
+            </div>
+            <div class="col-md-2">
+                <select name="categoryId" class="form-select bg-light border-0">
+                    <option value="">All Categories</option>
+                    @foreach (var cat in categories)
+                    {
+                        <option value="@cat.Id" selected="@(ViewBag.SelectedCategory == cat.Id)">@cat.Name</option>
+                    }
+                </select>
+            </div>
+            <div class="col-md-2 d-flex gap-2">
+                <button type="submit" class="btn btn-primary rounded-pill w-100">Filter</button>
+                <a asp-action="Index" class="btn btn-outline-secondary rounded-pill px-3"><i class="bi bi-arrow-counterclockwise"></i></a>
+            </div>
+        </form>
+    </div>
+
+    <div class="card border-0 shadow-sm rounded-4 overflow-hidden bg-white">
+        <div class="table-responsive">
+            <table class="table align-middle table-hover mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th class="ps-4">Dish</th>
+                        <th>Restaurant</th>
+                        <th>Category</th>
+                        <th>Price</th>
+                        <th>Status</th>
+                        <th class="text-end pe-4">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td class="ps-4 py-3">
+                                <div class="d-flex align-items-center">
+                                    <img src="@(string.IsNullOrEmpty(item.Image) ? "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=100&auto=format&fit=crop&q=80" : item.Image)" 
+                                         alt="@item.Name" 
+                                         class="rounded-3 me-3" 
+                                         style="width: 50px; height: 50px; object-fit: cover;" />
+                                    <div>
+                                        <div class="fw-bold text-dark">@item.Name</div>
+                                        <span class="text-muted small text-truncate d-inline-block" style="max-width: 250px;">@item.Description</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="fw-semibold text-dark small">@item.Restaurant?.Name</div>
+                            </td>
+                            <td>
+                                <span class="badge bg-light text-dark rounded-pill border">
+                                    @item.Category?.Name
+                                </span>
+                            </td>
+                            <td class="fw-bold text-dark fs-6">
+                                ₹@item.Price.ToString("F2")
+                            </td>
+                            <td>
+                                <form asp-action="ToggleAvailability" asp-route-id="@item.Id" method="post" class="d-inline">
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="badge @(item.IsAvailable ? "bg-success" : "bg-secondary") border-0 rounded-pill px-3 py-1 cursor-pointer">
+                                        @(item.IsAvailable ? "Available" : "Sold Out")
+                                    </button>
+                                </form>
+                            </td>
+                            <td class="text-end pe-4">
+                                <div class="d-inline-flex gap-2">
+                                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-light rounded-pill px-3" title="Edit Food Item">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                    <form asp-action="Delete" asp-route-id="@item.Id" method="post" class="d-inline" onsubmit="return confirm('Delete this food item?');">
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" class="btn btn-sm btn-outline-danger rounded-pill px-2" title="Delete">
+                                            <i class="bi bi-trash3"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

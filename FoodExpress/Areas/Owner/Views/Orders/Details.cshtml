@@ -1,0 +1,146 @@
+@model FoodExpress.Models.Order
+@{
+    ViewData["Title"] = $"Order #{Model.Id} - Kitchen Management";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <a asp-action="Index" class="btn btn-sm btn-outline-secondary rounded-pill mb-2">
+            <i class="bi bi-arrow-left me-1"></i> Back to Orders
+        </a>
+        <h2 class="fw-bold mb-1">Order #@Model.Id Kitchen Ticket</h2>
+        <span class="text-muted">Received at @Model.OrderDate.ToString("dd MMMM yyyy, hh:mm tt")</span>
+    </div>
+
+    <!-- Kitchen Status Changer -->
+    <div class="card border-0 shadow-sm rounded-4 p-3 bg-white">
+        <form asp-action="UpdateStatus" method="post" class="d-flex align-items-center gap-2">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="id" value="@Model.Id" />
+            <div>
+                <label class="form-label small text-muted mb-0">Update Kitchen Progress</label>
+                <select name="orderStatus" class="form-select form-select-sm" asp-items="Html.GetEnumSelectList<FoodExpress.Models.OrderStatus>()">
+                    <option value="@((int)Model.OrderStatus)" selected>@Model.OrderStatus</option>
+                </select>
+            </div>
+            <div class="d-flex align-items-end mt-auto">
+                <button type="submit" class="btn btn-sm btn-primary rounded-pill px-3">Update</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-8">
+        <div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-4">
+            <div class="card-header bg-white py-3 px-4 border-0">
+                <h5 class="fw-bold mb-0">Items to Prepare</h5>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th class="ps-4">Dish</th>
+                                <th>Unit Price</th>
+                                <th>Quantity</th>
+                                <th class="text-end pe-4">Subtotal</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.OrderItems)
+                            {
+                                <tr>
+                                    <td class="ps-4">
+                                        <div class="d-flex align-items-center gap-3">
+                                            @if (!string.IsNullOrEmpty(item.FoodItem?.Image))
+                                            {
+                                                <img src="@item.FoodItem.Image" class="rounded-3" style="width: 50px; height: 50px; object-fit: cover;" alt="@item.FoodItem.Name" />
+                                            }
+                                            <div>
+                                                <div class="fw-bold text-dark fs-6">@(item.FoodItem?.Name ?? "Item")</div>
+                                                <div class="small text-muted">@(item.FoodItem?.Category?.Name)</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>₹@item.Price.ToString("F2")</td>
+                                    <td><span class="badge bg-primary fs-6 px-3 py-1 rounded-pill">@item.Quantity x</span></td>
+                                    <td class="text-end pe-4 fw-bold text-dark">₹@item.SubTotal.ToString("F2")</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="card-footer bg-light p-4">
+                <div class="row justify-content-end">
+                    <div class="col-md-6">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="text-muted">Food Subtotal:</span>
+                            <span class="fw-medium text-dark">₹@Model.SubTotal.ToString("F2")</span>
+                        </div>
+                        @if (Model.DiscountAmount > 0)
+                        {
+                            <div class="d-flex justify-content-between mb-2 text-success">
+                                <span>Discount:</span>
+                                <span>-₹@Model.DiscountAmount.ToString("F2")</span>
+                            </div>
+                        }
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="text-muted">Delivery Fee:</span>
+                            <span class="fw-medium text-dark">₹@Model.DeliveryFee.ToString("F2")</span>
+                        </div>
+                        <div class="d-flex justify-content-between pt-2 border-top">
+                            <span class="fw-bold fs-5 text-dark">Order Total:</span>
+                            <span class="fw-bold fs-5 text-primary">₹@Model.TotalAmount.ToString("F2")</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @if (!string.IsNullOrEmpty(Model.Notes))
+        {
+            <div class="card border-0 shadow-sm rounded-4 p-4 bg-white mb-4">
+                <h6 class="fw-bold text-warning mb-2"><i class="bi bi-chat-quote-fill me-1"></i> Special Preparation Notes</h6>
+                <p class="mb-0 text-dark">@Model.Notes</p>
+            </div>
+        }
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card border-0 shadow-sm rounded-4 p-4 bg-white mb-4">
+            <h5 class="fw-bold mb-3">Customer &amp; Delivery Info</h5>
+            <div class="mb-3">
+                <span class="text-muted small d-block">Customer</span>
+                <span class="fw-semibold text-dark">@(Model.User?.FullName ?? "Guest")</span>
+            </div>
+            <div class="mb-3">
+                <span class="text-muted small d-block">Phone Number</span>
+                <span class="fw-bold text-primary">@(Model.PhoneNumber ?? Model.User?.PhoneNumber ?? "N/A")</span>
+            </div>
+            <div class="mb-3">
+                <span class="text-muted small d-block">Delivery Address</span>
+                <p class="text-dark mb-0">@Model.DeliveryAddress</p>
+            </div>
+            <div class="mb-3">
+                <span class="text-muted small d-block">Payment Status</span>
+                <span class="badge @(Model.PaymentStatus == FoodExpress.Models.PaymentStatus.Paid ? "bg-success" : "bg-warning text-dark") rounded-pill px-3 py-1">
+                    @Model.PaymentStatus (@Model.PaymentMethod)
+                </span>
+            </div>
+        </div>
+
+        <div class="card border-0 shadow-sm rounded-4 p-4 bg-white">
+            <h5 class="fw-bold mb-3">Restaurant Details</h5>
+            <div class="mb-2">
+                <span class="text-muted small d-block">Restaurant</span>
+                <span class="fw-semibold text-dark">@(Model.Restaurant?.Name)</span>
+            </div>
+            <div>
+                <span class="text-muted small d-block">Address</span>
+                <span class="text-dark">@(Model.Restaurant?.Address), @(Model.Restaurant?.City)</span>
+            </div>
+        </div>
+    </div>
+</div>

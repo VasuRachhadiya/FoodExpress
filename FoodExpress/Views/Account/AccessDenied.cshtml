@@ -1,0 +1,23 @@
+@{
+    ViewData["Title"] = "Access Restricted";
+}
+
+<div class="container py-5 text-center">
+    <div class="py-5">
+        <div class="mb-4 text-danger">
+            <i class="bi bi-shield-x" style="font-size: 5rem;"></i>
+        </div>
+        <h1 class="display-6 fw-bold mb-2">Access Restricted</h1>
+        <p class="lead text-muted mb-4">
+            You do not have the necessary permissions or role clearance to access this resource.
+        </p>
+        <div class="d-flex justify-content-center gap-3">
+            <a asp-controller="Home" asp-action="Index" class="btn btn-primary rounded-pill px-4">
+                Return to Home
+            </a>
+            <a asp-controller="Account" asp-action="Login" class="btn btn-outline-secondary rounded-pill px-4">
+                Switch Account
+            </a>
+        </div>
+    </div>
+</div>
